@@ -1,0 +1,34 @@
+This license does only to the files in the ldpc subfolder.
+
+Except as otherwise specified, all program code and documentation in this
+directory is copyright (c) 1995-2012 by Radford M. Neal and Nimiq 2017.
+
+Permission is granted for anyone to copy, use, modify, and distribute
+these programs and accompanying documents for any purpose, provided
+this copyright notice is retained and prominently displayed, and note
+is made of any changes made to these programs.  These programs and
+documents are distributed without any warranty, express or implied.
+As the programs were written for research purposes only, they have not
+been tested to the degree that would be advisable in any important
+application.  All use of these programs is entirely at the user's own
+risk.
+
+Some routines in the module rand.c are taken from the GNU C Library,
+and are copyrighted as described there and in the file LICENSE_RAND.
+
+Changes to the original version of Neal 2012:
+- rearrangement of some code
+- free memory that's not needed anymore
+- change the programs in a way that they don't input and output files
+  but work on buffers.
+- replace make_method enums by ints
+- strip away all the code that doesn't have to do with matrix
+  representation, matrix creation, encoding, decoding and helper files
+- adapt the make file for compilation to webassembly and asm.js
+- removed abandon_number and abandon_when from LU decomposition
+- added include guards
+
+TODO:
+- embed random numbers
+- replace aborts with exits
+- reduce buffer size used by emcc Module
