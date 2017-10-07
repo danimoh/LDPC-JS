@@ -7,12 +7,11 @@
 #include "alloc.h"
 #include "distrib.h"
 #include "mod2sparse.h"
-#include "mod2dense.h"
-#include "mod2convert.h"
 #include "globals.h"
 #include "parity-matrix-creation.h"
 #include "generator-matrix-creation.h"
 
+// TODO remove in release
 int main
 ( int argc,
   char **argv
@@ -22,13 +21,10 @@ int main
   N = 40;
   printf("Create parity matrix.\n");
   create_parity_matrix(PARITY_MATRIX_CREATION_EVENBOTH, "3", 42, 1);
-  mod2dense* D = mod2dense_allocate(M,N);
-  mod2sparse_to_dense(H,D);
-  mod2dense_print(D);
-  mod2dense_free(D);
-
+  mod2sparse_print(H);
+  
   printf("\n\n\nCreate Generator matrix.\n");
-  create_generator_matrix(GENERATOR_MATRIX_CREATION_SPARSE, GENERATOR_MATRIX_CREATION_LU_STRATEGY_MINPROD);
-  print_generator_matrix(1);
+  create_generator_matrix(GENERATOR_MATRIX_CREATION_LU_STRATEGY_MINPROD);
+  print_generator_matrix();
   free_and_exit(0);
 }

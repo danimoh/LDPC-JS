@@ -1,7 +1,5 @@
-This license does only to the files in the ldpc subfolder.
-
 Except as otherwise specified, all program code and documentation in this
-directory is copyright (c) 1995-2012 by Radford M. Neal and Nimiq 2017.
+directory is copyright (c) 1995-2012 by Radford M. Neal and danimoh 2017.
 
 Permission is granted for anyone to copy, use, modify, and distribute
 these programs and accompanying documents for any purpose, provided
@@ -27,8 +25,8 @@ Changes to the original version of Neal 2012:
 - adapt the make file for compilation to webassembly and asm.js
 - removed abandon_number and abandon_when from LU decomposition
 - added include guards
+- remove support for dense and mixed matrix representation
 
 TODO:
 - embed random numbers
-- replace aborts with exits
 - reduce buffer size used by emcc Module

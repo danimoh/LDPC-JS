@@ -14,8 +14,6 @@ For the description of the original code see http://radfordneal.github.io/LDPC-c
 #include "alloc.h"
 #include "distrib.h"
 #include "mod2sparse.h"
-#include "mod2dense.h"
-#include "mod2convert.h"
 #include "globals.h"
 
 

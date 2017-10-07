@@ -20,7 +20,7 @@ Module.expectedDataFileDownloads++;
     } else {
       throw 'using preloaded data can only be done on a web page or in a web worker';
     }
-    var PACKAGE_NAME = 'ldpc-wasm.data';
+    var PACKAGE_NAME = 'dist/ldpc-wasm.data';
     var REMOTE_PACKAGE_BASE = 'ldpc-wasm.data';
     if (typeof Module['locateFilePackage'] === 'function' && !Module['locateFile']) {
       Module['locateFile'] = Module['locateFilePackage'];
@@ -157,10 +157,10 @@ Module.expectedDataFileDownloads++;
           for (var i = 0; i < files.length; ++i) {
             DataRequest.prototype.requests[files[i].filename].onload();
           }
-              Module['removeRunDependency']('datafile_ldpc-wasm.data');
+              Module['removeRunDependency']('datafile_dist/ldpc-wasm.data');
 
     };
-    Module['addRunDependency']('datafile_ldpc-wasm.data');
+    Module['addRunDependency']('datafile_dist/ldpc-wasm.data');
   
     if (!Module.preloadResults) Module.preloadResults = {};
   
@@ -181,7 +181,7 @@ Module.expectedDataFileDownloads++;
   }
 
  }
- loadPackage({"files": [{"audio": 0, "start": 0, "crunched": 0, "end": 100000, "filename": "/randfile"}], "remote_package_size": 100000, "package_uuid": "bddc55d8-b655-4c77-aa69-ba8855b134d1"});
+ loadPackage({"files": [{"audio": 0, "start": 0, "crunched": 0, "end": 100000, "filename": "/randfile"}], "remote_package_size": 100000, "package_uuid": "1fde07b3-88bf-4c7b-a56a-ea9897dbd5d1"});
 
 })();
 
@@ -2188,7 +2188,7 @@ var ASM_CONSTS = [];
 
 STATIC_BASE = Runtime.GLOBAL_BASE;
 
-STATICTOP = STATIC_BASE + 108960;
+STATICTOP = STATIC_BASE + 108000;
 /* global initializers */  __ATINIT__.push();
 
 
@@ -2197,7 +2197,7 @@ memoryInitializer = Module["wasmJSMethod"].indexOf("asmjs") >= 0 || Module["wasm
 
 
 
-var STATIC_BUMP = 108960;
+var STATIC_BUMP = 108000;
 Module["STATIC_BASE"] = STATIC_BASE;
 Module["STATIC_BUMP"] = STATIC_BUMP;
 

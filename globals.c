@@ -14,9 +14,6 @@ int *cols;   /* Ordering of columns in generator matrix */
 mod2sparse *L, *U; /* Sparse LU decomposition, if type=='s' */
 int *rows;     /* Ordering of rows in generator matrix (type 's') */
 
-mod2dense *G;    /* Dense or mixed representation of generator matrix,
-               if type=='d' or type=='m' */
-
 void free_globals() {
     if (H) {
         mod2sparse_free(H);
@@ -32,9 +29,6 @@ void free_globals() {
     }
     if (rows) {
         free(rows);
-    }
-    if (G) {
-        mod2dense_free(G);
     }
 }
 

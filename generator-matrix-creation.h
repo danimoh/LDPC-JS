@@ -13,15 +13,7 @@ is chosen, it makes the computation much faster. */
 
 #include "alloc.h"
 #include "mod2sparse.h"
-#include "mod2dense.h"
-#include "mod2convert.h"
 #include "globals.h"
-
-
-// see http://radfordneal.github.io/LDPC-codes/encoding.html
-#define GENERATOR_MATRIX_CREATION_SPARSE 0
-#define GENERATOR_MATRIX_CREATION_DENSE 1
-#define GENERATOR_MATRIX_CREATION_MIXED 2
 
 // see http://radfordneal.github.io/LDPC-codes/sparse-LU.html
 #define GENERATOR_MATRIX_CREATION_LU_STRATEGY_FIRST 0
@@ -30,12 +22,10 @@ is chosen, it makes the computation much faster. */
 
 
 void create_generator_matrix(
-  int creation_method,
-  int lu_strategy // only used if creation_method == GENERATOR_MATRIX_CREATION_SPARSE.
+  int lu_strategy
 );
-void make_dense_mixed (int creation_method);     /* Procs to make it */
 void make_sparse (mod2sparse_strategy);
 
-void print_generator_matrix(int print_dense);
+void print_generator_matrix();
 
 #endif

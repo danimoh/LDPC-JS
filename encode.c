@@ -15,11 +15,9 @@ char* encode(
   int seed,
   int avoid4cycle,
   // parameters for generator matrix creation:
-  int generator_matrix_creation_method,
-  int generator_matrix_sparse_lu_strategy // only used when using sparse matrices
+  int generator_matrix_sparse_lu_strategy
 ) {
   char *encoded_message, *check;
-  mod2dense *u, *v;
   int i;
 
   /* Set global M and N */
@@ -39,37 +37,14 @@ char* encode(
     seed, avoid4cycle);
 
   /* Create generator matrix. */
-  create_generator_matrix(generator_matrix_creation_method, generator_matrix_sparse_lu_strategy);
+  create_generator_matrix(generator_matrix_sparse_lu_strategy);
 
   /* Allocate needed space. */
-
-  if (type=='d')
-  { u = mod2dense_allocate(N-M,1);
-    v = mod2dense_allocate(M,1);
-  }
-
-  if (type=='m')
-  { u = mod2dense_allocate(M,1);
-    v = mod2dense_allocate(M,1);
-  }
 
   encoded_message = chk_alloc (N, sizeof *encoded_message);
   check = chk_alloc (M, sizeof *check);
 
-  switch (type)
-  { case 's':
-    { sparse_encode (message, encoded_message);
-      break;
-    }
-    case 'd':
-    { dense_encode (message, encoded_message, u, v);
-      break;
-    }
-    case 'm':
-    { mixed_encode (message, encoded_message, u, v);
-      break;
-    }
-  }
+  sparse_encode (message, encoded_message);
 
   /* Multiply encoded message with H to check that encoded block is a code word. */
 
@@ -79,23 +54,11 @@ char* encode(
   { if (check[i]==1)
     { fprintf(stderr,"LDPC: Encoded message is not a code word!  (Fails check %d)\n",i);
       free(check);
-      if (u) {
-        mod2dense_free(u);
-      }
-      if (v) {
-        mod2dense_free(v);
-      }
       free_and_exit(1); 
     }
   }
 
   free(check);
-  if (u) {
-    mod2dense_free(u);
-  }
-  if (v) {
-    mod2dense_free(v);
-  }
   free_globals();
   return encoded_message;
 }

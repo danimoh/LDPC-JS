@@ -5,7 +5,6 @@ This file is an adaption of encode.c */
 #define ENCODE_H
 
 #include "alloc.h"
-#include "mod2dense.h"
 #include "mod2sparse.h"
 #include "enc.h"
 #include "globals.h"
@@ -23,8 +22,7 @@ char* encode(
   int seed,
   int avoid4cycle,
   // parameters for generator matrix creation:
-  int generator_matrix_creation_method,
-  int generator_matrix_sparse_lu_strategy // only used when using sparse matrices
+  int generator_matrix_sparse_lu_strategy
 );
 
 #endif
