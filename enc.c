@@ -50,6 +50,8 @@ void sparse_encode
   { 
     free(x);
     free(y);
+    free(sblk);
+    free(cblk);
     free_and_exit(1); /* Shouldn't occur, even if the parity check matrix has 
                 redundant rows */
   }

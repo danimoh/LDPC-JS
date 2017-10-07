@@ -16,7 +16,11 @@ and are copyrighted as described there and in the file LICENSE_RAND.
 
 Changes to the original version of Neal 2012:
 - rearrangement of some code
-- free memory that's not needed anymore
+- Free memory that's not needed anymore. Note that freeing the memory is
+  important even if the execution terminates as the instance is kept alive
+  (emcc option NO_EXIT_RUNTIME=1). In case of error however, still memory
+  can leak as in this case the method only frees it's own memory, arguments
+  and globals but not the memory of parent methods.
 - change the programs in a way that they don't input and output files
   but work on buffers.
 - replace make_method enums by ints

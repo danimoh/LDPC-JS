@@ -14,11 +14,13 @@ void create_parity_matrix(int creation_method, char* checks_per_col_or_check_dis
   if (distrib_max(d)>M)
   { printf("LDPC: At least one checks per bit (%d) is greater than total checks (%d)\n",
       distrib_max(d), M);
+    distrib_free(d);
     free_and_exit(1);
   }
 
   if (distrib_max(d)==M && N>1 && avoid4cycle)
   { printf("LDPC: Can't eliminate cycles of length four with this many checks per bit\n");
+    distrib_free(d);
     free_and_exit(1);
   }
 
@@ -59,7 +61,9 @@ void make_ldpc
       { while (left==0)
         { z += 1;
           if (z>distrib_size(d))
-          { free_and_exit(1);
+          { distrib_free(d);
+            free(part);
+            free_and_exit(1);
           }
           left = part[z];
         }
@@ -98,7 +102,9 @@ void make_ldpc
         while (left==0)
         { z += 1;
           if (z>distrib_size(d))
-          { free_and_exit(1);
+          { distrib_free(d);
+            free(part);
+            free_and_exit(1);
           }
           left = part[z];
         }
@@ -131,10 +137,16 @@ void make_ldpc
       { printf("LDPC: Had to place %d checks in rows unevenly\n",uneven);
       }
 
+      free(u);
+
       break;
     }
 
-    default: free_and_exit(1);
+    default: {
+      distrib_free(d);
+      free(part);
+      free_and_exit(1);
+    }
   }
 
   /* Add extra bits to avoid rows with less than two checks. */
@@ -240,8 +252,6 @@ void make_ldpc
     { printf("LDPC: Couldn't eliminate all cycles of length four in 10 passes\n");
     }
   }
-
-  // TODO free memory
 }
 
 
@@ -270,6 +280,7 @@ int *column_partition
   { 
     free(trunc);
     free(part);
+    distrib_free(d);
     free_and_exit(1);
   }
   

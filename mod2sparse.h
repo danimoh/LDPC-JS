@@ -34,7 +34,7 @@
 
 #include "alloc.h"
 #include "mod2sparse_struct.h"
-
+#include "globals.h"
 
 /* MACROS TO GET AT ELEMENTS OF A SPARSE MATRIX.  The 'first', 'last', 'next',
    and 'prev' macros traverse the elements in a row or column.  Moving past

@@ -37,7 +37,7 @@ void make_sparse(mod2sparse_strategy strategy)
   int n, cL, cU, cB;
   int i;
 
-  /* Find LU decomposition. */
+  /* Find LU decomposition. L an U are gloabl variables. */
 
   L = mod2sparse_allocate(M,M);
   U = mod2sparse_allocate(M,N);

@@ -139,34 +139,3 @@ int distrib_max
 
   return d->list[cur].num;
 }
-
-
-/* TEST PROGRAM. */
-
-#ifdef TEST_DISTRIB
-
-main
-( int argc,
-  char **argv
-)
-{
-  distrib *d;
-  int i, j;
-
-  for (i = 1; i<argc; i++)
-  { d = distrib_create(argv[i]);
-    if (d==0)
-    { printf("Error\n\n");
-    }
-    else
-    { for (j = 0; j<distrib_size(d); j++)
-      { printf("%.3f %d\n",distrib_prop(d,j),distrib_num(d,j));
-      }
-      printf("\n");
-    }
-  }
-
-  exit(0);
-}
-
-#endif

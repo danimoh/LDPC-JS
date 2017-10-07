@@ -149,6 +149,12 @@ void mod2sparse_copy
   if (mod2sparse_rows(m)>mod2sparse_rows(r) 
    || mod2sparse_cols(m)>mod2sparse_cols(r))
   { fprintf(stderr,"mod2sparse_copy: Destination matrix is too small\n");
+    if (m != H && m != L && m != U) {
+      mod2sparse_free(m);
+    }
+    if (r != H && r != L && r != U) {
+      mod2sparse_free(r);
+    }
     free_and_exit(1);
   }
 
@@ -173,7 +179,7 @@ void mod2sparse_copy
 void mod2sparse_copyrows
 ( mod2sparse *m,	/* Matrix to copy */
   mod2sparse *r,	/* Place to store copy of matrix */
-  int *rows		/* Indexes of rows to copy, from 0 */
+  int *rws		/* Indexes of rows to copy, from 0 */
 )
 { 
   mod2entry *e;
@@ -182,17 +188,35 @@ void mod2sparse_copyrows
   if (mod2sparse_cols(m)>mod2sparse_cols(r))
   { fprintf(stderr,
      "mod2sparse_copyrows: Destination matrix has fewer columns than source\n");
+    if (m != H && m != L && m != U) {
+      mod2sparse_free(m);
+    }
+    if (r != H && r != L && r != U) {
+      mod2sparse_free(r);
+    }
+    if (rws != rows) {
+      free(rws);
+    }
     free_and_exit(1);
   }
 
   mod2sparse_clear(r);
 
   for (i = 0; i<mod2sparse_rows(r); i++)
-  { if (rows[i]<0 || rows[i]>=mod2sparse_rows(m))
+  { if (rws[i]<0 || rws[i]>=mod2sparse_rows(m))
     { fprintf(stderr,"mod2sparse_copyrows: Row index out of range\n");
+      if (m != H && m != L && m != U) {
+        mod2sparse_free(m);
+      }
+      if (r != H && r != L && r != U) {
+        mod2sparse_free(r);
+      }
+      if (rws != rows) {
+        free(rws);
+      }
       free_and_exit(1);
     }
-    e = mod2sparse_first_in_row(m,rows[i]);
+    e = mod2sparse_first_in_row(m,rws[i]);
     while (!mod2sparse_at_end(e))
     { mod2sparse_insert(r,i,e->col);
       e = mod2sparse_next_in_row(e);
@@ -206,7 +230,7 @@ void mod2sparse_copyrows
 void mod2sparse_copycols
 ( mod2sparse *m,	/* Matrix to copy */
   mod2sparse *r,	/* Place to store copy of matrix */
-  int *cols		/* Indexes of columns to copy, from 0 */
+  int *cls		/* Indexes of columns to copy, from 0 */
 )
 { 
   mod2entry *e;
@@ -215,17 +239,35 @@ void mod2sparse_copycols
   if (mod2sparse_rows(m)>mod2sparse_rows(r))
   { fprintf(stderr,
       "mod2sparse_copycols: Destination matrix has fewer rows than source\n");
+    if (m != H && m != L && m != U) {
+      mod2sparse_free(m);
+    }
+    if (r != H && r != L && r != U) {
+      mod2sparse_free(r);
+    }
+    if (cls != cols) {
+      free(cls);
+    }
     free_and_exit(1);
   }
 
   mod2sparse_clear(r);
 
   for (j = 0; j<mod2sparse_cols(r); j++)
-  { if (cols[j]<0 || cols[j]>=mod2sparse_cols(m))
+  { if (cls[j]<0 || cls[j]>=mod2sparse_cols(m))
     { fprintf(stderr,"mod2sparse_copycols: Column index out of range\n");
+      if (m != H && m != L && m != U) {
+        mod2sparse_free(m);
+      }
+      if (r != H && r != L && r != U) {
+        mod2sparse_free(r);
+      }
+      if (cls != cols) {
+        free(cls);
+      }
       free_and_exit(1);
     }
-    e = mod2sparse_first_in_col(m,cols[j]);
+    e = mod2sparse_first_in_col(m,cls[j]);
     while (!mod2sparse_at_end(e))
     { mod2sparse_insert(r,e->row,j);
       e = mod2sparse_next_in_col(e);
@@ -235,7 +277,7 @@ void mod2sparse_copycols
 
 
 /* PRINT A SPARSE MOD2 MATRIX IN HUMAN-READABLE FORM. */
-
+// TODO can be removed in release
 void mod2sparse_print
 ( mod2sparse *m
 )
@@ -285,6 +327,9 @@ mod2entry *mod2sparse_find
 
   if (row<0 || row>=mod2sparse_rows(m) || col<0 || col>=mod2sparse_cols(m))
   { fprintf(stderr,"mod2sparse_find: row or column index out of bounds\n");
+    if (m != H && m != L && m != U) {
+      mod2sparse_free(m);
+    }
     free_and_exit(1);
   }
 
@@ -345,6 +390,9 @@ mod2entry *mod2sparse_insert
 
   if (row<0 || row>=mod2sparse_rows(m) || col<0 || col>=mod2sparse_cols(m))
   { fprintf(stderr,"mod2sparse_insert: row or column index out of bounds\n");
+    if (m != H && m != L && m != U) {
+      mod2sparse_free(m);
+    }
     free_and_exit(1);
   }
 
@@ -394,6 +442,9 @@ mod2entry *mod2sparse_insert
 
   if (!mod2sparse_at_end(ce) && mod2sparse_row(ce)==row) 
   { fprintf(stderr,"mod2sparse_insert: Garbled matrix\n");
+    if (m != H && m != L && m != U) {
+      mod2sparse_free(m);
+    }
     free_and_exit(1);
   }
 
@@ -408,6 +459,9 @@ mod2entry *mod2sparse_insert
     { 
       if (!mod2sparse_at_end(ce) && mod2sparse_row(ce)==row) 
       { fprintf(stderr,"mod2sparse_insert: Garbled matrix\n");
+        if (m != H && m != L && m != U) {
+          mod2sparse_free(m);
+        }
         free_and_exit(1);
       }
 
@@ -439,11 +493,17 @@ void mod2sparse_delete
 { 
   if (e==0)
   { fprintf(stderr,"mod2sparse_delete: Trying to delete a null entry\n");
+    if (m != H && m != L && m != U) {
+      mod2sparse_free(m);
+    }
     free_and_exit(1);
   }
 
   if (e->row<0 || e->col<0)
   { fprintf(stderr,"mod2sparse_delete: Trying to delete a header entry\n");
+    if (m != H && m != L && m != U) {
+      mod2sparse_free(m);
+    }
     free_and_exit(1);
   }
 
@@ -471,6 +531,12 @@ int mod2sparse_equal
   if (mod2sparse_rows(m1)!=mod2sparse_rows(m2) 
    || mod2sparse_cols(m1)!=mod2sparse_cols(m2))
   { fprintf(stderr,"mod2sparse_equal: Matrices have different dimensions\n");
+    if (m1 != H && m1 != L && m1 != U) {
+      mod2sparse_free(m1);
+    }
+    if (m2 != H && m2 != L && m2 != U) {
+      mod2sparse_free(m2);
+    }
     free_and_exit(1);
   }
   
@@ -512,12 +578,24 @@ void mod2sparse_transpose
    || mod2sparse_cols(m)!=mod2sparse_rows(r))
   { fprintf(stderr,
      "mod2sparse_transpose: Matrices have incompatible dimensions\n");
+    if (m != H && m != L && m != U) {
+      mod2sparse_free(m);
+    }
+    if (r != H && r != L && r != U) {
+      mod2sparse_free(r);
+    }
     free_and_exit(1);
   }
 
   if (r==m)
   { fprintf(stderr, 
      "mod2sparse_transpose: Result matrix is the same as the operand\n");
+    if (m != H && m != L && m != U) {
+      mod2sparse_free(m);
+    }
+    if (r != H && r != L && r != U) {
+      mod2sparse_free(r);
+    }
     free_and_exit(1);
   }
 
@@ -551,12 +629,30 @@ void mod2sparse_add
    || mod2sparse_rows(m2)!=mod2sparse_rows(r)
    || mod2sparse_cols(m2)!=mod2sparse_cols(r)) 
   { fprintf(stderr,"mod2sparse_add: Matrices have different dimensions\n");
+    if (m1 != H && m1 != L && m1 != U) {
+      mod2sparse_free(m1);
+    }
+    if (m2 != H && m2 != L && m2 != U) {
+      mod2sparse_free(m2);
+    }
+    if (r != H && r != L && r != U) {
+      mod2sparse_free(r);
+    }
     free_and_exit(1);
   }
 
   if (r==m1 || r==m2)
   { fprintf(stderr,
      "mod2sparse_add: Result matrix is the same as one of the operands\n");
+    if (m1 != H && m1 != L && m1 != U) {
+      mod2sparse_free(m1);
+    }
+    if (m2 != H && m2 != L && m2 != U) {
+      mod2sparse_free(m2);
+    }
+    if (r != H && r != L && r != U) {
+      mod2sparse_free(r);
+    }
     free_and_exit(1);
   }
 
@@ -614,12 +710,30 @@ void mod2sparse_multiply
    || mod2sparse_cols(m2)!=mod2sparse_cols(r))
   { fprintf (stderr,
       "mod2sparse_multiply: Matrices have incompatible dimensions\n");
+    if (m1 != H && m1 != L && m1 != U) {
+      mod2sparse_free(m1);
+    }
+    if (m2 != H && m2 != L && m2 != U) {
+      mod2sparse_free(m2);
+    }
+    if (r != H && r != L && r != U) {
+      mod2sparse_free(r);
+    }
     free_and_exit(1);
   }
 
   if (r==m1 || r==m2)
   { fprintf(stderr,
      "mod2sparse_multiply: Result matrix is the same as one of the operands\n");
+    if (m1 != H && m1 != L && m1 != U) {
+      mod2sparse_free(m1);
+    }
+    if (m2 != H && m2 != L && m2 != U) {
+      mod2sparse_free(m2);
+    }
+    if (r != H && r != L && r != U) {
+      mod2sparse_free(r);
+    }
     free_and_exit(1);
   }
 
@@ -704,6 +818,9 @@ int mod2sparse_count_row
 
   if (row<0 || row>=mod2sparse_rows(m))
   { fprintf(stderr,"mod2sparse_count_row: row index out of bounds\n");
+    if (m != H && m != L && m != U) {
+      mod2sparse_free(m);
+    }
     free_and_exit(1);
   }
 
@@ -731,6 +848,9 @@ int mod2sparse_count_col
 
   if (col<0 || col>=mod2sparse_cols(m))
   { fprintf(stderr,"mod2sparse_count_col: column index out of bounds\n");
+    if (m != H && m != L && m != U) {
+      mod2sparse_free(m);
+    }
     free_and_exit(1);
   }
 
@@ -760,12 +880,24 @@ void mod2sparse_add_row
   if (mod2sparse_cols(m1)<mod2sparse_cols(m2))
   { fprintf (stderr,
      "mod2sparse_add_row: row added to is shorter than row added from\n");
+    if (m1 != H && m1 != L && m1 != U) {
+      mod2sparse_free(m1);
+    }
+    if (m2 != H && m2 != L && m2 != U) {
+      mod2sparse_free(m2);
+    }
     free_and_exit(1);
   }
 
   if (row1<0 || row1>=mod2sparse_rows(m1) 
    || row2<0 || row2>=mod2sparse_rows(m2))
   { fprintf (stderr,"mod2sparse_add_row: row index out of range\n");
+    if (m1 != H && m1 != L && m1 != U) {
+      mod2sparse_free(m1);
+    }
+    if (m2 != H && m2 != L && m2 != U) {
+      mod2sparse_free(m2);
+    }
     free_and_exit(1);
   }
 
@@ -808,12 +940,24 @@ void mod2sparse_add_col
   if (mod2sparse_rows(m1)<mod2sparse_rows(m2))
   { fprintf (stderr,
      "mod2sparse_add_col: Column added to is shorter than column added from\n");
+    if (m1 != H && m1 != L && m1 != U) {
+      mod2sparse_free(m1);
+    }
+    if (m2 != H && m2 != L && m2 != U) {
+      mod2sparse_free(m2);
+    }
     free_and_exit(1);
   }
 
   if (col1<0 || col1>=mod2sparse_cols(m1) 
    || col2<0 || col2>=mod2sparse_cols(m2))
   { fprintf (stderr,"mod2sparse_add_col: Column index out of range\n");
+    if (m1 != H && m1 != L && m1 != U) {
+      mod2sparse_free(m1);
+    }
+    if (m2 != H && m2 != L && m2 != U) {
+      mod2sparse_free(m2);
+    }
     free_and_exit(1);
   }
 
@@ -849,11 +993,12 @@ int mod2sparse_decomp
   int K,		/* Size of sub-matrix to find LU decomposition of */
   mod2sparse *L,	/* Matrix in which L is stored, M by K */
   mod2sparse *U,	/* Matrix in which U is stored, K by N */
-  int *rows,		/* Array where row indexes are stored, M long */
-  int *cols,		/* Array where column indexes are stored, N long */
-  mod2sparse_strategy strategy /* Strategy to follow in picking rows/columns */
+  int *rws,		/* Array where row indexes are stored, M long */
+  int *cls,		/* Array where column indexes are stored, N long */
+  mod2sparse_strategy strategy /* Strategy to follow in picking rws/columns */
 )
-{  
+{ 
+  // no nee here to free A, L, U, rws, cls as this method is only called with globals
   int *rinv, *cinv, *rcnt;
   mod2sparse *B;
   int M, N;
@@ -897,8 +1042,8 @@ int mod2sparse_decomp
 
   /* Set up initial row and column choices. */
 
-  for (i = 0; i<M; i++) rows[i] = rinv[i] = i;
-  for (j = 0; j<N; j++) cols[j] = cinv[j] = j;
+  for (i = 0; i<M; i++) rws[i] = rinv[i] = i;
+  for (j = 0; j<N; j++) cls[j] = cinv[j] = j;
  
   /* Find L and U one column at a time. */
 
@@ -915,7 +1060,7 @@ int mod2sparse_decomp
         found = 0;
 
         for (k = i; k<N; k++)
-        { e = mod2sparse_first_in_col(B,cols[k]);
+        { e = mod2sparse_first_in_col(B,cls[k]);
           while (!mod2sparse_at_end(e))
           { if (rinv[mod2sparse_row(e)]>=i)
             { found = 1;
@@ -934,9 +1079,9 @@ int mod2sparse_decomp
         found = 0;
 
         for (j = i; j<N; j++)
-        { cc2 = mod2sparse_count_col(B,cols[j]);
+        { cc2 = mod2sparse_count_col(B,cls[j]);
           if (!found || cc2<cc)
-          { e2 = mod2sparse_first_in_col(B,cols[j]);
+          { e2 = mod2sparse_first_in_col(B,cls[j]);
             while (!mod2sparse_at_end(e2))
             { if (rinv[mod2sparse_row(e2)]>=i)
               { found = 1;
@@ -958,8 +1103,8 @@ int mod2sparse_decomp
         found = 0;
 
         for (j = i; j<N; j++)
-        { cc2 = mod2sparse_count_col(B,cols[j]);
-          e2 = mod2sparse_first_in_col(B,cols[j]);
+        { cc2 = mod2sparse_count_col(B,cls[j]);
+          e2 = mod2sparse_first_in_col(B,cls[j]);
           while (!mod2sparse_at_end(e2))
           { if (rinv[mod2sparse_row(e2)]>=i)
             { cr2 = rcnt[mod2sparse_row(e2)];
@@ -979,6 +1124,10 @@ int mod2sparse_decomp
 
       default:
       { fprintf(stderr,"mod2sparse_decomp: Unknown stategy\n");
+        mod2sparse_free(B);
+        free(rinv);
+        free(cinv);
+        if (strategy==Mod2sparse_minprod) free(rcnt);
         free_and_exit(1);
       }
     }
@@ -991,28 +1140,40 @@ int mod2sparse_decomp
 
     if (found)
     { 
-      if (cinv[mod2sparse_col(e)]!=k) free_and_exit(1);
+      if (cinv[mod2sparse_col(e)]!=k) {
+        mod2sparse_free(B);
+        free(rinv);
+        free(cinv);
+        if (strategy==Mod2sparse_minprod) free(rcnt);
+        free_and_exit(1);
+      }
 
-      cols[k] = cols[i];
-      cols[i] = mod2sparse_col(e);
+      cls[k] = cls[i];
+      cls[i] = mod2sparse_col(e);
 
-      cinv[cols[k]] = k;
-      cinv[cols[i]] = i;
+      cinv[cls[k]] = k;
+      cinv[cls[i]] = i;
 
       k = rinv[mod2sparse_row(e)];
 
-      if (k<i) free_and_exit(1);
+      if (k<i) {
+        mod2sparse_free(B);
+        free(rinv);
+        free(cinv);
+        if (strategy==Mod2sparse_minprod) free(rcnt);
+        free_and_exit(1);
+      }
 
-      rows[k] = rows[i];
-      rows[i] = mod2sparse_row(e);
+      rws[k] = rws[i];
+      rws[i] = mod2sparse_row(e);
 
-      rinv[rows[k]] = k;
-      rinv[rows[i]] = i;
+      rinv[rws[k]] = k;
+      rinv[rws[i]] = i;
     }
 
     /* Update L, U, and B. */
 
-    f = mod2sparse_first_in_col(B,cols[i]); 
+    f = mod2sparse_first_in_col(B,cls[i]); 
 
     while (!mod2sparse_at_end(f))
     { 
@@ -1027,11 +1188,11 @@ int mod2sparse_decomp
         mod2sparse_insert(L,k,i);
       }
       else if (rinv[k]<i)
-      { mod2sparse_insert(U,rinv[k],cols[i]);
+      { mod2sparse_insert(U,rinv[k],cls[i]);
       }
       else
       { mod2sparse_insert(L,k,i);
-        mod2sparse_insert(U,i,cols[i]);
+        mod2sparse_insert(U,i,cls[i]);
       }
 
       f = fn;
@@ -1040,7 +1201,7 @@ int mod2sparse_decomp
     /* Get rid of all entries in the current column of B, just to save space. */
 
     for (;;)
-    { f = mod2sparse_first_in_col(B,cols[i]);
+    { f = mod2sparse_first_in_col(B,cls[i]);
       if (mod2sparse_at_end(f)) break;
       mod2sparse_delete(B,f);
     }
@@ -1052,7 +1213,7 @@ int mod2sparse_decomp
 
   for (i = K; i<M; i++)
   { for (;;)
-    { f = mod2sparse_first_in_row(L,rows[i]);
+    { f = mod2sparse_first_in_row(L,rws[i]);
       if (mod2sparse_at_end(f)) break;
       mod2sparse_delete(L,f);
     }
@@ -1071,7 +1232,7 @@ int mod2sparse_decomp
 
 int mod2sparse_forward_sub
 ( mod2sparse *L,	/* Matrix that is lower triangular after reordering */
-  int *rows,		/* Array of indexes (from 0) of rows for new order */
+  int *rws,		/* Array of indexes (from 0) of rows for new order */
   char *x,		/* Vector on right of equation, also reordered */
   char *y		/* Place to store solution */
 )
@@ -1084,11 +1245,14 @@ int mod2sparse_forward_sub
   /* Make sure that L is lower-triangular, after row re-ordering. */
 
   for (i = 0; i<K; i++)
-  { ii = rows ? rows[i] : i;
+  { ii = rws ? rws[i] : i;
     e = mod2sparse_last_in_row(L,ii);
     if (!mod2sparse_at_end(e) && mod2sparse_col(e)>i)
     { fprintf(stderr,
         "mod2sparse_forward_sub: Matrix is not lower-triangular\n");
+      if (rws != rows) free(rws);
+      free(x);
+      free(y);
       free_and_exit(1);
     }
   }
@@ -1097,7 +1261,7 @@ int mod2sparse_forward_sub
 
   for (i = 0; i<K; i++)
   { 
-    ii = rows ? rows[i] : i;
+    ii = rws ? rws[i] : i;
 
     /* Look at bits in this row, forming inner product with partial 
        solution, and seeing if the diagonal is 1. */
@@ -1138,7 +1302,7 @@ int mod2sparse_forward_sub
 
 int mod2sparse_backward_sub
 ( mod2sparse *U,	/* Matrix that is upper triangular after reordering */
-  int *cols,		/* Array of indexes (from 0) of columns for new order */
+  int *cls,		/* Array of indexes (from 0) of columns for new order */
   char *y,		/* Vector on right of equation */
   char *z		/* Place to store solution, also reordered */
 )
@@ -1151,11 +1315,14 @@ int mod2sparse_backward_sub
   /* Make sure that U is upper-triangular, after column re-ordering. */
 
   for (i = 0; i<K; i++)
-  { ii = cols ? cols[i] : i;
+  { ii = cls ? cls[i] : i;
     e = mod2sparse_last_in_col(U,ii);
     if (!mod2sparse_at_end(e) && mod2sparse_row(e)>i)
     { fprintf(stderr,
         "mod2sparse_backward_sub: Matrix is not upper-triangular\n");
+      if (cls != cols) free(cls);
+      free(y);
+      free(z);
       free_and_exit(1);
     }
   }
@@ -1164,7 +1331,7 @@ int mod2sparse_backward_sub
 
   for (i = K-1; i>=0; i--)
   { 
-    ii = cols ? cols[i] : i;
+    ii = cls ? cls[i] : i;
 
     /* Look at bits in this row, forming inner product with partial 
        solution, and seeing if the diagonal is 1. */
