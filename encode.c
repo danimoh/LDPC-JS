@@ -5,19 +5,20 @@ This file is an adaption of encode.c */
 #include "encode.h"
 
 
-char* encode(
+void encode(
   char* message, // each char represents one bit
   int message_length, // number of message bits (K)
   int parity_length, // number of parity bits (M = N-K)
   // parameters for parity matrix creation:
   int parity_matrix_creation_method,
-  char* checks_per_col_or_check_distribution, // e.g. "3" or "0.3x2/0.6x3/0.1x7"
+  char* checks_per_col_or_check_distribution, // e.g. "3" or "0.3x2/0.6x3/0.1x7" // TODO maybe remove
   int seed,
   int avoid4cycle,
   // parameters for generator matrix creation:
-  int generator_matrix_sparse_lu_strategy
+  int generator_matrix_sparse_lu_strategy,
+  char* out_encoded_message // each char represents one bit. Length N.
 ) {
-  char *encoded_message, *check;
+  char *check;
   int i;
 
   /* Set global M and N */
@@ -31,6 +32,11 @@ char* encode(
     free_and_exit(1);
   }
 
+  printf("Message to encode:\n");
+  for (i=0; i<message_length; ++i) {
+    printf("%d ", message[i]);
+  }
+  printf("\n");
 
   /* Create parity check matrix. This will be written to global variable H */
   create_parity_matrix(parity_matrix_creation_method, checks_per_col_or_check_distribution,
@@ -41,15 +47,14 @@ char* encode(
 
   /* Allocate needed space. */
 
-  encoded_message = chk_alloc (N, sizeof *encoded_message);
   check = chk_alloc (M, sizeof *check);
 
-  sparse_encode (message, encoded_message);
+  sparse_encode (message, out_encoded_message);
 
   /* Multiply encoded message with H to check that encoded block is a code word. */
 
-  mod2sparse_mulvec (H, encoded_message, check);
-
+  mod2sparse_mulvec (H, out_encoded_message, check);
+  // TODO might also use check from check.h - Maybe remove in release
   for (i = 0; i<M; i++) 
   { if (check[i]==1)
     { fprintf(stderr,"LDPC: Encoded message is not a code word!  (Fails check %d)\n",i);
@@ -58,7 +63,12 @@ char* encode(
     }
   }
 
+  printf("Encoded message:\n");
+  for (i=0; i<N; ++i) {
+    printf("%d ", out_encoded_message[i]);
+  }
+  printf("\n");
+
   free(check);
   free_globals();
-  return encoded_message;
 }

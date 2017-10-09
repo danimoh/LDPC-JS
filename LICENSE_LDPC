@@ -24,13 +24,20 @@ Changes to the original version of Neal 2012:
 - change the programs in a way that they don't input and output files
   but work on buffers.
 - replace make_method enums by ints
+- replace channel enum by ints
 - strip away all the code that doesn't have to do with matrix
   representation, matrix creation, encoding, decoding and helper files
 - adapt the make file for compilation to webassembly and asm.js
 - removed abandon_number and abandon_when from LU decomposition
 - added include guards
 - remove support for dense and mixed matrix representation
+- remove support for decoding by enumerating all possible codewords
+- remove support for printing decode steps to the console
+- remove support for encoding / decoding multiple blocks at once.
+- remove global variables in dec.h
 
 TODO:
 - embed random numbers
 - reduce buffer size used by emcc Module
+- free memory in decode
+- cache H and G

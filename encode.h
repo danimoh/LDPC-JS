@@ -12,7 +12,7 @@ This file is an adaption of encode.c */
 #include "generator-matrix-creation.h"
 
 
-char* encode(
+void encode(
   char* message, // each char represents one bit
   int message_length, // number of message bits (K)
   int parity_length, // number of parity bits (M = N-K)
@@ -22,7 +22,8 @@ char* encode(
   int seed,
   int avoid4cycle,
   // parameters for generator matrix creation:
-  int generator_matrix_sparse_lu_strategy
+  int generator_matrix_sparse_lu_strategy,
+  char* out_encoded_message // each char represents one bit. Length N.
 );
 
 #endif
