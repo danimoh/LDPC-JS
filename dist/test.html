@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Nimiqode Demo</title>
+    <script src="ldpc-wasm.js"></script>
+    <script src="../LDPC.js"></script>
+</head>
+<body>
+<div>Open the console.</div>
+<script>
+    // Note that the results between multiple test runs can differ as you can't set the seed for javascripts random
+    // generator.
+
+    const TEST_RUNS = 100;
+    const MESSAGE_LENGTH = 250;
+    const PARITY_LENGTH = 250;
+    const ENCODED_LENGTH = MESSAGE_LENGTH + PARITY_LENGTH;
+    const BIT_ERROR_RATE = 0.08;
+    const BITS_TO_DESTROY = Math.round(BIT_ERROR_RATE * ENCODED_LENGTH);
+    const testMessage = new Array(MESSAGE_LENGTH);
+
+    
+    function runTest() {
+        let fails = 0;
+        let totalBitErrors = 0;
+    
+        for (let run=0; run<TEST_RUNS; ++run) {
+            for (let i=0; i<MESSAGE_LENGTH; ++i) {
+                testMessage[i] = Math.random()>0.5? 1 : 0;
+            }
+            let encoded = LDPC.encode(testMessage, PARITY_LENGTH);
+            // destroy some bits
+            for (let i=0; i<BITS_TO_DESTROY; ++i) {
+                let index = Math.floor(Math.random() * (ENCODED_LENGTH+1));
+                encoded[index] = 1 - encoded[index]; // flip the bit
+            }
+            //
+            let decoded = LDPC.decode(encoded, MESSAGE_LENGTH, PARITY_LENGTH);
+            let bitErrors = 0;
+            for (let i=0; i<MESSAGE_LENGTH; ++i) {
+                if (decoded[i] !== testMessage[i]) {
+                    bitErrors++;
+                }
+            }
+            totalBitErrors += bitErrors;
+            if (bitErrors) {
+                ++fails;
+            }
+        }
+        console.log('runs', TEST_RUNS, 'fails', fails, 'average relative bit error per fail', totalBitErrors / (fails * ENCODED_LENGTH) || 0);
+    }
+
+    Module.onRuntimeInitialized = runTest;
+</script>
+</body>
+</html>
