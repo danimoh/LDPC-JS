@@ -1,5 +1,5 @@
 var LDPC = {
-    LDPC_BASE_PATH: 'dist/',
+    LDPC_BASE_PATH: window.LDPC_PATH || 'dist/',
 
     // see http://radfordneal.github.io/LDPC-codes/encoding.html#make-gen
     PARITY_MATRIX_CREATION_EVENCOL: 0,

@@ -61,7 +61,7 @@
             }
         }
         console.log('Results at message length', MESSAGE_LENGTH, 'parity length', PARITY_LENGTH, 'channel error rate', CHANNEL_ERROR_RATE);
-        console.log('runs', TEST_RUNS, 'fails', fails, 'average relative bit error per fail', totalBitErrors / (fails * ENCODED_LENGTH) || 0);
+        console.log('runs', TEST_RUNS, 'fails', fails, 'average relative bit error per fail', totalBitErrors / (fails * MESSAGE_LENGTH) || 0);
     }
 
     runTest();
