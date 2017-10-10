@@ -2,8 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Nimiqode Demo</title>
-    <script src="ldpc-wasm.js"></script>
+    <title>LDPC Demo</title>
     <script src="../LDPC.js"></script>
 </head>
 <body>
@@ -16,12 +15,12 @@
     const MESSAGE_LENGTH = 250;
     const PARITY_LENGTH = 250;
     const ENCODED_LENGTH = MESSAGE_LENGTH + PARITY_LENGTH;
-    const BIT_ERROR_RATE = 0.08;
-    const BITS_TO_DESTROY = Math.round(BIT_ERROR_RATE * ENCODED_LENGTH);
+    const CHANNEL_ERROR_RATE = 0.12;
+    const BITS_TO_DESTROY = Math.round(CHANNEL_ERROR_RATE * ENCODED_LENGTH);
     const testMessage = new Array(MESSAGE_LENGTH);
 
     
-    function runTest() {
+    async function runTest() {
         let fails = 0;
         let totalBitErrors = 0;
     
@@ -29,14 +28,23 @@
             for (let i=0; i<MESSAGE_LENGTH; ++i) {
                 testMessage[i] = Math.random()>0.5? 1 : 0;
             }
-            let encoded = LDPC.encode(testMessage, PARITY_LENGTH);
-            // destroy some bits
+            
+            let encoded = await LDPC.encode(testMessage, PARITY_LENGTH);
+            
+            let received = Array.from(encoded);
+            // flip some bits
             for (let i=0; i<BITS_TO_DESTROY; ++i) {
                 let index = Math.floor(Math.random() * (ENCODED_LENGTH+1));
-                encoded[index] = 1 - encoded[index]; // flip the bit
+                // we can give the decoder a hint about how confident we are about a value
+                // (e.g. 0.9 means rather sure it's 1)
+                if (received[index]) {
+                    received[index] = 0.1;
+                } else {
+                    received[index] = 0.9;
+                }
             }
-            //
-            let decoded = LDPC.decode(encoded, MESSAGE_LENGTH, PARITY_LENGTH);
+
+            let decoded = await LDPC.decode(received, MESSAGE_LENGTH, PARITY_LENGTH);
             let bitErrors = 0;
             for (let i=0; i<MESSAGE_LENGTH; ++i) {
                 if (decoded[i] !== testMessage[i]) {
@@ -48,10 +56,11 @@
                 ++fails;
             }
         }
+        console.log('Results at message length', MESSAGE_LENGTH, 'parity length', PARITY_LENGTH, 'channel error rate', CHANNEL_ERROR_RATE);
         console.log('runs', TEST_RUNS, 'fails', fails, 'average relative bit error per fail', totalBitErrors / (fails * ENCODED_LENGTH) || 0);
     }
 
-    Module.onRuntimeInitialized = runTest;
+    runTest();
 </script>
 </body>
 </html>
