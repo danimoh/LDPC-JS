@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>LDPC Demo</title>
-    <script src="../LDPC.js"></script>
+    <script src="LDPC.js"></script>
 </head>
 <body>
 <div>Open the console.</div>
@@ -17,6 +17,10 @@
     const ENCODED_LENGTH = MESSAGE_LENGTH + PARITY_LENGTH;
     const CHANNEL_ERROR_RATE = 0.12;
     const BITS_TO_DESTROY = Math.round(CHANNEL_ERROR_RATE * ENCODED_LENGTH);
+    // we can give the decoder a hint about how confident we are about a value
+    // (e.g. 1 means pretty sure it's 1, 0.9 rather sure it's a 1.etc.)
+    // The higher the CONFIDENCE_HINT is chosen in this test, the easier it gets.
+    const CONFIDENCE_HINT = 0.1;
     const testMessage = new Array(MESSAGE_LENGTH);
 
     
@@ -38,9 +42,9 @@
                 // we can give the decoder a hint about how confident we are about a value
                 // (e.g. 0.9 means rather sure it's 1)
                 if (received[index]) {
-                    received[index] = 0.1;
+                    received[index] = 0 + CONFIDENCE_HINT;
                 } else {
-                    received[index] = 0.9;
+                    received[index] = 1 - CONFIDENCE_HINT;
                 }
             }
 

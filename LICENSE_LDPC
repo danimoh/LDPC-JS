@@ -1,6 +1,10 @@
 Except as otherwise specified, all program code and documentation in this
 directory is copyright (c) 1995-2012 by Radford M. Neal and danimoh 2017.
 
+LDPC.js and the compiled code is licensed under MIT license.
+
+Original license for the .c and .h files and the Makefile:
+
 Permission is granted for anyone to copy, use, modify, and distribute
 these programs and accompanying documents for any purpose, provided
 this copyright notice is retained and prominently displayed, and note
@@ -41,3 +45,4 @@ TODO:
 - reduce buffer size used by emcc Module
 - free memory in decode
 - cache H and G
+- add RELEASE flag
