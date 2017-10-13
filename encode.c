@@ -26,7 +26,7 @@ void encode(
   M = parity_length;
 
   if (N<=M)
-  { fprintf(stderr,
+  { printf(
     "Can't encode if number of bits (%d) not greater than number of checks (%d)\n",
       N,M);
     free_and_exit(1);
@@ -57,7 +57,7 @@ void encode(
   // TODO might also use check from check.h - Maybe remove in release
   for (i = 0; i<M; i++) 
   { if (check[i]==1)
-    { fprintf(stderr,"LDPC: Encoded message is not a code word!  (Fails check %d)\n",i);
+    { printf("LDPC: Encoded message is not a code word!  (Fails check %d)\n",i);
       free(check);
       free_and_exit(1); 
     }

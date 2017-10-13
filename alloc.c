@@ -19,7 +19,7 @@ void *chk_alloc
   p = calloc(n,size);
 
   if (p==0)
-  { fprintf(stderr,"LDPC: Ran out of memory (while trying to allocate %d bytes)\n",
+  { printf("LDPC: Ran out of memory (while trying to allocate %d bytes)\n",
       n*size);
     free_and_exit(1);
   }

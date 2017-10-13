@@ -38,8 +38,7 @@ void decode
   M = parity_length;
 
   if (N<=M)
-  { fprintf(stderr,
-    "Can't encode if number of bits (%d) not greater than number of checks (%d)\n",
+  { printf("Can't encode if number of bits (%d) not greater than number of checks (%d)\n",
       N,M);
     free_and_exit(1);
   }

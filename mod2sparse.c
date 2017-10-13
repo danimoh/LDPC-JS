@@ -58,7 +58,7 @@ mod2sparse *mod2sparse_allocate
   int i, j;
 
   if (n_rows<=0 || n_cols<=0)
-  { fprintf(stderr,"mod2sparse_allocate: Invalid number of rows or columns\n");
+  { printf("mod2sparse_allocate: Invalid number of rows or columns\n");
     free_and_exit(1);
   }
 
@@ -148,7 +148,7 @@ void mod2sparse_copy
 
   if (mod2sparse_rows(m)>mod2sparse_rows(r) 
    || mod2sparse_cols(m)>mod2sparse_cols(r))
-  { fprintf(stderr,"mod2sparse_copy: Destination matrix is too small\n");
+  { printf("mod2sparse_copy: Destination matrix is too small\n");
     if (m != H && m != L && m != U) {
       mod2sparse_free(m);
     }
@@ -186,7 +186,7 @@ void mod2sparse_copyrows
   int i;
 
   if (mod2sparse_cols(m)>mod2sparse_cols(r))
-  { fprintf(stderr,
+  { printf(
      "mod2sparse_copyrows: Destination matrix has fewer columns than source\n");
     if (m != H && m != L && m != U) {
       mod2sparse_free(m);
@@ -204,7 +204,7 @@ void mod2sparse_copyrows
 
   for (i = 0; i<mod2sparse_rows(r); i++)
   { if (rws[i]<0 || rws[i]>=mod2sparse_rows(m))
-    { fprintf(stderr,"mod2sparse_copyrows: Row index out of range\n");
+    { printf("mod2sparse_copyrows: Row index out of range\n");
       if (m != H && m != L && m != U) {
         mod2sparse_free(m);
       }
@@ -237,7 +237,7 @@ void mod2sparse_copycols
   int j;
 
   if (mod2sparse_rows(m)>mod2sparse_rows(r))
-  { fprintf(stderr,
+  { printf(
       "mod2sparse_copycols: Destination matrix has fewer rows than source\n");
     if (m != H && m != L && m != U) {
       mod2sparse_free(m);
@@ -255,7 +255,7 @@ void mod2sparse_copycols
 
   for (j = 0; j<mod2sparse_cols(r); j++)
   { if (cls[j]<0 || cls[j]>=mod2sparse_cols(m))
-    { fprintf(stderr,"mod2sparse_copycols: Column index out of range\n");
+    { printf("mod2sparse_copycols: Column index out of range\n");
       if (m != H && m != L && m != U) {
         mod2sparse_free(m);
       }
@@ -326,7 +326,7 @@ mod2entry *mod2sparse_find
   mod2entry *re, *ce;
 
   if (row<0 || row>=mod2sparse_rows(m) || col<0 || col>=mod2sparse_cols(m))
-  { fprintf(stderr,"mod2sparse_find: row or column index out of bounds\n");
+  { printf("mod2sparse_find: row or column index out of bounds\n");
     if (m != H && m != L && m != U) {
       mod2sparse_free(m);
     }
@@ -389,7 +389,7 @@ mod2entry *mod2sparse_insert
   mod2entry *re, *ce, *ne;
 
   if (row<0 || row>=mod2sparse_rows(m) || col<0 || col>=mod2sparse_cols(m))
-  { fprintf(stderr,"mod2sparse_insert: row or column index out of bounds\n");
+  { printf("mod2sparse_insert: row or column index out of bounds\n");
     if (m != H && m != L && m != U) {
       mod2sparse_free(m);
     }
@@ -441,7 +441,7 @@ mod2entry *mod2sparse_insert
   ce = mod2sparse_last_in_col(m,col);
 
   if (!mod2sparse_at_end(ce) && mod2sparse_row(ce)==row) 
-  { fprintf(stderr,"mod2sparse_insert: Garbled matrix\n");
+  { printf("mod2sparse_insert: Garbled matrix\n");
     if (m != H && m != L && m != U) {
       mod2sparse_free(m);
     }
@@ -458,7 +458,7 @@ mod2entry *mod2sparse_insert
     for (;;)
     { 
       if (!mod2sparse_at_end(ce) && mod2sparse_row(ce)==row) 
-      { fprintf(stderr,"mod2sparse_insert: Garbled matrix\n");
+      { printf("mod2sparse_insert: Garbled matrix\n");
         if (m != H && m != L && m != U) {
           mod2sparse_free(m);
         }
@@ -492,7 +492,7 @@ void mod2sparse_delete
 )
 { 
   if (e==0)
-  { fprintf(stderr,"mod2sparse_delete: Trying to delete a null entry\n");
+  { printf("mod2sparse_delete: Trying to delete a null entry\n");
     if (m != H && m != L && m != U) {
       mod2sparse_free(m);
     }
@@ -500,7 +500,7 @@ void mod2sparse_delete
   }
 
   if (e->row<0 || e->col<0)
-  { fprintf(stderr,"mod2sparse_delete: Trying to delete a header entry\n");
+  { printf("mod2sparse_delete: Trying to delete a header entry\n");
     if (m != H && m != L && m != U) {
       mod2sparse_free(m);
     }
@@ -530,7 +530,7 @@ int mod2sparse_equal
 
   if (mod2sparse_rows(m1)!=mod2sparse_rows(m2) 
    || mod2sparse_cols(m1)!=mod2sparse_cols(m2))
-  { fprintf(stderr,"mod2sparse_equal: Matrices have different dimensions\n");
+  { printf("mod2sparse_equal: Matrices have different dimensions\n");
     if (m1 != H && m1 != L && m1 != U) {
       mod2sparse_free(m1);
     }
@@ -576,7 +576,7 @@ void mod2sparse_transpose
 
   if (mod2sparse_rows(m)!=mod2sparse_cols(r) 
    || mod2sparse_cols(m)!=mod2sparse_rows(r))
-  { fprintf(stderr,
+  { printf(
      "mod2sparse_transpose: Matrices have incompatible dimensions\n");
     if (m != H && m != L && m != U) {
       mod2sparse_free(m);
@@ -588,7 +588,7 @@ void mod2sparse_transpose
   }
 
   if (r==m)
-  { fprintf(stderr, 
+  { printf( 
      "mod2sparse_transpose: Result matrix is the same as the operand\n");
     if (m != H && m != L && m != U) {
       mod2sparse_free(m);
@@ -628,7 +628,7 @@ void mod2sparse_add
    || mod2sparse_cols(m1)!=mod2sparse_cols(r) 
    || mod2sparse_rows(m2)!=mod2sparse_rows(r)
    || mod2sparse_cols(m2)!=mod2sparse_cols(r)) 
-  { fprintf(stderr,"mod2sparse_add: Matrices have different dimensions\n");
+  { printf("mod2sparse_add: Matrices have different dimensions\n");
     if (m1 != H && m1 != L && m1 != U) {
       mod2sparse_free(m1);
     }
@@ -642,7 +642,7 @@ void mod2sparse_add
   }
 
   if (r==m1 || r==m2)
-  { fprintf(stderr,
+  { printf(
      "mod2sparse_add: Result matrix is the same as one of the operands\n");
     if (m1 != H && m1 != L && m1 != U) {
       mod2sparse_free(m1);
@@ -708,7 +708,7 @@ void mod2sparse_multiply
   if (mod2sparse_cols(m1)!=mod2sparse_rows(m2) 
    || mod2sparse_rows(m1)!=mod2sparse_rows(r) 
    || mod2sparse_cols(m2)!=mod2sparse_cols(r))
-  { fprintf (stderr,
+  { printf(
       "mod2sparse_multiply: Matrices have incompatible dimensions\n");
     if (m1 != H && m1 != L && m1 != U) {
       mod2sparse_free(m1);
@@ -723,7 +723,7 @@ void mod2sparse_multiply
   }
 
   if (r==m1 || r==m2)
-  { fprintf(stderr,
+  { printf(
      "mod2sparse_multiply: Result matrix is the same as one of the operands\n");
     if (m1 != H && m1 != L && m1 != U) {
       mod2sparse_free(m1);
@@ -817,7 +817,7 @@ int mod2sparse_count_row
   int count;
 
   if (row<0 || row>=mod2sparse_rows(m))
-  { fprintf(stderr,"mod2sparse_count_row: row index out of bounds\n");
+  { printf("mod2sparse_count_row: row index out of bounds\n");
     if (m != H && m != L && m != U) {
       mod2sparse_free(m);
     }
@@ -847,7 +847,7 @@ int mod2sparse_count_col
   int count;
 
   if (col<0 || col>=mod2sparse_cols(m))
-  { fprintf(stderr,"mod2sparse_count_col: column index out of bounds\n");
+  { printf("mod2sparse_count_col: column index out of bounds\n");
     if (m != H && m != L && m != U) {
       mod2sparse_free(m);
     }
@@ -878,7 +878,7 @@ void mod2sparse_add_row
   mod2entry *f1, *f2, *ft;
 
   if (mod2sparse_cols(m1)<mod2sparse_cols(m2))
-  { fprintf (stderr,
+  { printf(
      "mod2sparse_add_row: row added to is shorter than row added from\n");
     if (m1 != H && m1 != L && m1 != U) {
       mod2sparse_free(m1);
@@ -891,7 +891,7 @@ void mod2sparse_add_row
 
   if (row1<0 || row1>=mod2sparse_rows(m1) 
    || row2<0 || row2>=mod2sparse_rows(m2))
-  { fprintf (stderr,"mod2sparse_add_row: row index out of range\n");
+  { printf("mod2sparse_add_row: row index out of range\n");
     if (m1 != H && m1 != L && m1 != U) {
       mod2sparse_free(m1);
     }
@@ -938,7 +938,7 @@ void mod2sparse_add_col
   mod2entry *f1, *f2, *ft;
 
   if (mod2sparse_rows(m1)<mod2sparse_rows(m2))
-  { fprintf (stderr,
+  { printf(
      "mod2sparse_add_col: Column added to is shorter than column added from\n");
     if (m1 != H && m1 != L && m1 != U) {
       mod2sparse_free(m1);
@@ -951,7 +951,7 @@ void mod2sparse_add_col
 
   if (col1<0 || col1>=mod2sparse_cols(m1) 
    || col2<0 || col2>=mod2sparse_cols(m2))
-  { fprintf (stderr,"mod2sparse_add_col: Column index out of range\n");
+  { printf("mod2sparse_add_col: Column index out of range\n");
     if (m1 != H && m1 != L && m1 != U) {
       mod2sparse_free(m1);
     }
@@ -1012,7 +1012,7 @@ int mod2sparse_decomp
 
   if (mod2sparse_cols(L)!=K || mod2sparse_rows(L)!=M
    || mod2sparse_cols(U)!=N || mod2sparse_rows(U)!=K)
-  { fprintf (stderr,
+  { printf(
       "mod2sparse_decomp: Matrices have incompatible dimensions\n");
     free_and_exit(1);
   }
@@ -1123,7 +1123,7 @@ int mod2sparse_decomp
       }
 
       default:
-      { fprintf(stderr,"mod2sparse_decomp: Unknown stategy\n");
+      { printf("mod2sparse_decomp: Unknown stategy\n");
         mod2sparse_free(B);
         free(rinv);
         free(cinv);
@@ -1248,7 +1248,7 @@ int mod2sparse_forward_sub
   { ii = rws ? rws[i] : i;
     e = mod2sparse_last_in_row(L,ii);
     if (!mod2sparse_at_end(e) && mod2sparse_col(e)>i)
-    { fprintf(stderr,
+    { printf(
         "mod2sparse_forward_sub: Matrix is not lower-triangular\n");
       if (rws != rows) free(rws);
       free(x);
@@ -1318,7 +1318,7 @@ int mod2sparse_backward_sub
   { ii = cls ? cls[i] : i;
     e = mod2sparse_last_in_col(U,ii);
     if (!mod2sparse_at_end(e) && mod2sparse_row(e)>i)
-    { fprintf(stderr,
+    { printf(
         "mod2sparse_backward_sub: Matrix is not upper-triangular\n");
       if (cls != cols) free(cls);
       free(y);

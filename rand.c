@@ -31,13 +31,6 @@ static long int this_nrand48 (unsigned short int [3]);
 */
 
 
-/* CONSTANT PI.  Defined here if not in <math.h>. */
-
-#ifndef M_PI
-#define M_PI 3.14159265358979323846
-#endif
-
-
 /* TABLES OF REAL RANDOM NUMBERS.  A file of 100000 real random numbers
    (NOT pseudo-random) is used in conjunction with pseudo-random numbers
    for extra insurance.  These are employed in the form of five tables
@@ -74,7 +67,7 @@ static void initialize (void)
     f = fopen(RAND_FILE,"rb");
     
     if (f==NULL)
-    { fprintf(stderr,"Can't open file of random numbers (%s)\n",RAND_FILE);
+    { printf("Can't open file of random numbers (%s)\n",RAND_FILE);
       free_and_exit(1);
     }
 
@@ -83,7 +76,7 @@ static void initialize (void)
       { w = 0;
         for (k = 0; k<4; k++)
         { if (fread(&b,1,1,f)!=1)
-          { fprintf(stderr,"Error reading file of random numbers (%s)\n",
+          { printf("Error reading file of random numbers (%s)\n",
                             RAND_FILE);
             free_and_exit(1);
           }
@@ -125,28 +118,6 @@ void rand_seed
 }
 
 
-/* SET STATE STRUCTURE TO USE. */
-
-void rand_use_state
-( rand_state *st
-)
-{ 
-  if (!initialized) initialize();
-
-  state = st;
-}
-
-
-/* RETURN POINTER TO CURRENT STATE. */
-
-rand_state *rand_get_state (void)
-{ 
-  if (!initialized) initialize();
-
-  return state;
-}
-
-
 /* GENERATE RANDOM 31-BIT INTEGER.  Not really meant for use outside this
    module. */
 
@@ -183,14 +154,6 @@ double rand_uniform (void)
 }
 
 
-/* GENERATE UNIFORMLY FORM (0,1). */
-
-double rand_uniopen (void)
-{
-  return (0.5+(double)rand_word()) / (1.0+(double)0x7fffffff);
-}
-
-
 /* GENERATE RANDOM INTEGER FROM 0, 1, ..., (n-1). */
 
 int rand_int
@@ -198,252 +161,6 @@ int rand_int
 )
 { 
   return (int) (n * rand_uniform());
-}
-
-
-/* GENERATE INTEGER FROM 0, 1, ..., (n-1), WITH GIVEN DISTRIBUTION. */
-
-int rand_pickd
-( double *p,
-  int n
-)
-{ 
-  double t, r;
-  int i;
-
-  t = 0;
-  for (i = 0; i<n; i++)
-  { if (p[i]<0)
-    { free_globals();
-      abort();
-    }
-    t += p[i];
-  }
-
-  if (t<=0)
-    { free_globals();
-      abort();
-    }
-
-  r = t * rand_uniform();
-
-  for (i = 0; i<n; i++)
-  { r -= p[i];
-    if (r<0) return i;
-  }
-
-  /* Return value with non-zero probability if we get here due to roundoff. */
-
-  for (i = 0; i<n; i++) 
-  { if (p[i]>0) return i;
-  }
-
-  free_globals();
-  abort(); 
-}
-
-
-/* SAME PROCEDURE AS ABOVE, BUT WITH FLOAT ARGUMENT. */
-
-int rand_pickf
-( float *p,
-  int n
-)
-{ 
-  double t, r;
-  int i;
-
-  t = 0;
-  for (i = 0; i<n; i++)
-  { if (p[i]<=0)
-    { free_globals();
-      abort();
-    }
-    t += p[i];
-  }
-
-  if (t<=0)
-    { free_globals();
-      abort();
-    }
-
-  r = t * rand_uniform();
-
-  for (i = 0; i<n; i++)
-  { r -= p[i];
-    if (r<0) return i;
-  }
-
-  /* Return value with non-zero probability if we get here due to roundoff. */
-
-  for (i = 0; i<n; i++) 
-  { if (p[i]>0) return i;
-  }
-
-  free_globals();
-  abort(); 
-}
-
-
-/* GENERATE RANDOM PERMUTATION OF INTEGERS FROM 1 TO N. */
-
-void rand_permutation
-( int *perm,		/* Place to store permutation */
-  int n			/* Number of integers to permute */
-)
-{
-  int i, j, t;
-
-  for (i = 0; i<n; i++) 
-  { perm[i] = i+1;
-  }
-
-  for (i = 0; i<n; i++)
-  { t = perm[i];
-    j = i + rand_int(n-i);
-    perm[i] = perm[j];
-    perm[j] = t;
-  }
-}
-
-
-/* POISSON GENERATOR.  The method used is simple, but not very fast.  See
-   Devroye, p. 503.  Very large means are done using Gaussian approximation. */
-
-int rand_poisson 
-( double lambda
-)
-{ int v;
-  if (lambda>10000)
-  { v = (int) (lambda + rand_gaussian()*sqrt(lambda) + 0.5);
-  }
-  else
-  { v = 0;
-    for (;;)
-    { lambda -= rand_exp();
-      if (lambda<=0) break;
-      v += 1;
-    }
-  }
-  return v;
-}
-
-
-/* GAUSSIAN GENERATOR.  Done by using the Box-Muller method, but only one
-   of the variates is retained (using both would require saving more state).
-   See Devroye, p. 235. 
-
-   As written, should never deliver exactly zero, which may sometimes be
-   helpful. */
-
-double rand_gaussian (void)
-{
-  double a, b;
-
-  a = rand_uniform();
-  b = rand_uniopen();
-
-  return cos(2.0*M_PI*a) * sqrt(-2.0*log(b));
-}
-
-
-/* EXPONENTIAL GENERATOR.  See Devroye, p. 29.  Written so as to never
-   return exactly zero. */
-
-double rand_exp (void)
-{
-  return -log(rand_uniopen());
-}
-
-
-/* LOGISTIC GENERATOR.  Just inverts the CDF. */
-
-double rand_logistic (void)
-{ double u;
-  u = rand_uniopen();
-  return log(u/(1-u));
-}
-
-
-/* CAUCHY GENERATOR.  See Devroye, p. 29. */
-
-double rand_cauchy (void)
-{
-  return tan (M_PI * (rand_uniopen()-0.5));
-}
-
-
-/* GAMMA GENERATOR.  Generates a positive real number, r, with density
-   proportional to r^(a-1) * exp(-r).  See Devroye, p. 410 and p. 420. 
-   Things are fiddled to avoid ever returning a value that is very near 
-   zero. */
-
-double rand_gamma
-( double a
-)
-{
-  double b, c, X, Y, Z, U, V, W;
-
-  if (a<0.00001)
-  { X = a;
-  }
-
-  else if (a<=1) 
-  { 
-    U = rand_uniopen();
-    X = rand_gamma(1+a) * pow(U,1/a);
-  }
-
-  else if (a<1.00001)
-  { X = rand_exp();
-  }
-
-  else
-  {
-    b = a-1;
-    c = 3*a - 0.75;
-  
-    for (;;)
-    {
-      U = rand_uniopen();
-      V = rand_uniopen();
-    
-      W = U*(1-U);
-      Y = sqrt(c/W) * (U-0.5);
-      X = b+Y;
-  
-      if (X>=0)
-      { 
-        Z = 64*W*W*W*V*V;
-  
-        if (Z <= 1 - 2*Y*Y/X || log(Z) <= 2 * (b*log(X/b) - Y)) break;
-      }
-    }
-  }
-
-  return X<1e-30 && X<a ? (a<1e-30 ? a : 1e-30) : X;
-}
-
-
-/* BETA GENERATOR. Generates a real number, r, in (0,1), with density
-   proportional to r^(a-1) * (1-r)^(b-1).  Things are fiddled to avoid
-   the end-points, and to make the procedure symmetric between a and b. */
-
-double rand_beta 
-( double a, 
-  double b
-)
-{
-  double x, y, r;
-
-  do
-  { x = rand_gamma(a);
-    y = rand_gamma(b);
-    r = 1.0 + x/(x+y);
-    r = r - 1.0;
-  } while (r<=0.0 || r>=1.0);
-
-  return r;
 }
 
 
