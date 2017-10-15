@@ -39,7 +39,6 @@ Changes to the original version of Neal 2012:
 - replace the random generator by xorshift64*
 
 TODO:
-- embed random numbers
 - reduce buffer size used by emcc Module
 - free memory in decode
 - cache H and G

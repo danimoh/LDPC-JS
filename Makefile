@@ -23,13 +23,14 @@ emcc:
 	$(LINK_EMCC) -O3 parity-matrix-creation.o generator-matrix-creation.o mod2sparse.o \
 	   rand.o alloc.o globals.o distrib.o check.o enc.o dec.o encode.o decode.o test.o -lm \
 	   -s EXPORTED_FUNCTIONS='["_encode","_decode"]' -s NO_EXIT_RUNTIME=1 -s MODULARIZE=1 \
-	   -s EXPORT_NAME="'LDPC_HANDLER'" \
+	   -s EXPORT_NAME="'LDPC_HANDLER'" -s EXPORTED_RUNTIME_METHODS='["ccall"]' \
 	   -o dist/ldpc-asm.html
 	# compile to wasm
 	$(LINK_EMCC) -O3 parity-matrix-creation.o generator-matrix-creation.o mod2sparse.o \
 	   rand.o alloc.o globals.o distrib.o check.o enc.o dec.o encode.o decode.o test.o -lm \
 	   -s EXPORTED_FUNCTIONS='["_encode","_decode"]' -s NO_EXIT_RUNTIME=1 -s MODULARIZE=1 \
-	   -s EXPORT_NAME="'LDPC_HANDLER'" -s WASM=1 \
+	   -s EXPORT_NAME="'LDPC_HANDLER'" -s EXPORTED_RUNTIME_METHODS='["ccall"]' \
+	   -s WASM=1 \
 	   -o dist/ldpc-wasm.html
 	rm -f *.o
 
