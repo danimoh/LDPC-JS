@@ -9,31 +9,18 @@
 #ifndef RAND_H
 #define RAND_H
 
-#include <stdlib.h>
 #include <stdint.h>
-#include <stdio.h>
-#include <string.h>
-#include <math.h>
-
 #include "globals.h"
 
 
-/* STATE OF RANDOM NUMBER GENERATOR. */
+extern uint64_t rand_state; /* The state must be seeded with a nonzero value. */
 
-#define N_tables 5		/* Number of tables of real random numbers */
-
-typedef struct
-{ int seed;			/* Seed state derives from */
-  int ptr[N_tables];		/* Pointers for tables of real random numbers */
-  unsigned short state48[3];	/* State of 'rand48' pseudo-random generator */
-} rand_state;
-
+uint64_t xorshift64star();
 
 /* BASIC PSEUDO-RANDOM GENERATION PROCEDURES. */
 
-void rand_seed (int);		/* Initialize current state structure by seed */
+void rand_seed (uint64_t);		/* Initialize current state structure by seed */
 
-int rand_word (void);       /* Generate random 31-bit positive integer */
 int rand_int (int);		/* Uniform from 0, 1, ... (n-1) */
 
 #endif
