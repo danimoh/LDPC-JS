@@ -4,8 +4,16 @@ This file is an adaption of rcode.h */
 #ifndef GLOBALS_H
 #define GLOBALS_H
 
-#include <stdio.h>
 #include <stdlib.h>
+
+#ifndef RELEASE
+#include <stdio.h>
+#endif
+
+// disable printf on release
+#ifdef RELEASE
+#define printf(fmt, ...) (0)
+#endif
 
 #include "mod2sparse_struct.h"
 #include "mod2sparse.h"

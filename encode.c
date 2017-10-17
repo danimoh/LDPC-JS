@@ -11,7 +11,7 @@ void encode(
   int parity_length, // number of parity bits (M = N-K)
   // parameters for parity matrix creation:
   int parity_matrix_creation_method,
-  char* checks_per_col_or_check_distribution, // e.g. "3" or "0.3x2/0.6x3/0.1x7" // TODO maybe remove
+  int checks_per_col,
   int seed,
   int avoid4cycle,
   // parameters for generator matrix creation:
@@ -39,7 +39,7 @@ void encode(
   printf("\n");
 
   /* Create parity check matrix. This will be written to global variable H */
-  create_parity_matrix(parity_matrix_creation_method, checks_per_col_or_check_distribution,
+  create_parity_matrix(parity_matrix_creation_method, checks_per_col,
     seed, avoid4cycle);
 
   /* Create generator matrix. */

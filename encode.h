@@ -4,6 +4,10 @@ This file is an adaption of encode.c */
 #ifndef ENCODE_H
 #define ENCODE_H
 
+#ifndef RELEASE
+#include <stdio.h>
+#endif
+
 #include "alloc.h"
 #include "mod2sparse.h"
 #include "enc.h"
@@ -18,7 +22,7 @@ void encode(
   int parity_length, // number of parity bits (M = N-K)
   // parameters for parity matrix creation:
   int parity_matrix_creation_method,
-  char* checks_per_col_or_check_distribution, // e.g. "3" or "0.3x2/0.6x3/0.1x7"
+  int checks_per_col,
   int seed,
   int avoid4cycle,
   // parameters for generator matrix creation:

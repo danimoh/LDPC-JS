@@ -4,10 +4,13 @@ This file is an adaption of decode.c */
 #ifndef DECODE_H
 #define DECODE_H
 
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
+
+#ifndef RELEASE
+#include <stdio.h>
+#endif
 
 #include "rand.h"
 #include "alloc.h"
@@ -32,7 +35,7 @@ void decode
   int max_iterations, // max iterations for the probability propagation
   // parameters for parity matrix creation:
   int parity_matrix_creation_method,
-  char* checks_per_col_or_check_distribution, // e.g. "3" or "0.3x2/0.6x3/0.1x7"
+  int checks_per_col,
   int seed,
   int avoid4cycle,
   // parameters for generator matrix creation:

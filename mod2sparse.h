@@ -29,8 +29,11 @@
 #define MOD2SPARSE_H
 
 #include <stdlib.h>
-#include <stdio.h>
 #include <math.h>
+
+#ifndef RELEASE
+#include <stdio.h>
+#endif
 
 #include "alloc.h"
 #include "mod2sparse_struct.h"

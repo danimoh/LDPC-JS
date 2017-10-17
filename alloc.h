@@ -6,7 +6,10 @@
 #define alloc_h
 
 #include <stdlib.h>
+
+#ifndef RELEASE
 #include <stdio.h>
+#endif
 
 #include "globals.h"
 

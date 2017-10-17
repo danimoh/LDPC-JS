@@ -37,6 +37,7 @@ Changes to the original version of Neal 2012:
 - remove support for encoding / decoding multiple blocks at once.
 - remove global variables in dec.h
 - replace the random generator by xorshift64*
+- removed support for irregular column weight distribution
 
 TODO:
 - reduce buffer size used by emcc Module

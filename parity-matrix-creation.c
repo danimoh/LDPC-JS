@@ -5,9 +5,9 @@ For the description of the original code see http://radfordneal.github.io/LDPC-c
 #include "parity-matrix-creation.h"
 
 
-void create_parity_matrix(int creation_method, char* checks_per_col_or_check_distribution, int seed, int avoid4cycle)
+void create_parity_matrix(int creation_method, int checks_per_col, int seed, int avoid4cycle)
 {
-  distrib* d = distrib_create(checks_per_col_or_check_distribution); // see http://radfordneal.github.io/LDPC-codes/pchk.html#make-ldpc
+  distrib* d = distrib_create(checks_per_col); // see http://radfordneal.github.io/LDPC-codes/pchk.html#make-ldpc
 
   /* Check for some problems. */
 

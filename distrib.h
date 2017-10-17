@@ -7,9 +7,12 @@
 #define DISTRIB_H
 
 #include <stdlib.h>
-#include <stdio.h>
 #include <math.h>
 #include <string.h>
+
+#ifndef RELEASE
+#include <stdio.h>
+#endif
 
 #include "alloc.h"
 
@@ -42,7 +45,7 @@ typedef struct distrib
 
 /* PROCEDURES FOR DISTRIBUTION LISTS. */
 
-distrib *distrib_create	(char *);
+distrib *distrib_create	(int);
 void distrib_free (distrib *);
 
 int distrib_max(distrib *);

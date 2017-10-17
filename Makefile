@@ -1,6 +1,6 @@
-# compile using emscripten
-COMPILE_EMCC = emcc -c -O    # Command to compile a module from .c to .o
-LINK_EMCC =    emcc          # Command to link a program
+# compile using emscripten. Use -DRELEASE to #define RELEASE in the C preprocessor
+COMPILE_EMCC = emcc -c -O -DRELEASE=1   # Command to compile a module from .c to .o
+LINK_EMCC =    emcc -DRELEASE=1         # Command to link a program
 
 
 # MAKE ALL THE MAIN PROGRAMS.  First makes the modules used.
@@ -25,7 +25,7 @@ emcc:
 	   -s EXPORTED_FUNCTIONS='["_encode","_decode"]' -s NO_EXIT_RUNTIME=1 -s MODULARIZE=1 \
 	   -s EXPORT_NAME="'LDPC_HANDLER'" -s EXPORTED_RUNTIME_METHODS='["ccall"]' \
 	   -s LIBRARY_DEPS_TO_AUTOEXPORT='[]' -s DEFAULT_LIBRARY_FUNCS_TO_INCLUDE="[]" \
-	   -s NO_FILESYSTEM=1 -s DISABLE_EXCEPTION_CATCHING=1 -s ELIMINATE\_DUPLICATE\_FUNCTIONS=1 \
+	   -s NO_FILESYSTEM=1 -s DISABLE_EXCEPTION_CATCHING=1 -s ELIMINATE_DUPLICATE_FUNCTIONS=1 \
 	   --closure 1 \
 	   -o dist/ldpc-asm.html
 	# compile to wasm

@@ -1,3 +1,5 @@
+#ifndef RELEASE
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -11,7 +13,6 @@
 #include "parity-matrix-creation.h"
 #include "generator-matrix-creation.h"
 
-// TODO remove in release
 int main
 ( int argc,
   char **argv
@@ -20,7 +21,7 @@ int main
   M = 20;
   N = 40;
   printf("Create parity matrix.\n");
-  create_parity_matrix(PARITY_MATRIX_CREATION_EVENBOTH, "3", 42, 1);
+  create_parity_matrix(PARITY_MATRIX_CREATION_EVENBOTH, 3, 42, 1);
   mod2sparse_print(H);
   
   printf("\n\n\nCreate Generator matrix.\n");
@@ -28,3 +29,5 @@ int main
   print_generator_matrix();
   free_and_exit(0);
 }
+
+#endif

@@ -46,10 +46,10 @@ var LDPC = {
     // async
     encode: function(message, parityLength,
             // optional parameters
-            parityMatrixCreationMethod, checksPerColumnOrCheckDistribution, randomSeed, avoid4Cycles, sparseLuStrategy) {
+            parityMatrixCreationMethod, checksPerColumn, randomSeed, avoid4Cycles, sparseLuStrategy) {
         return LDPC._awaitHandler().then(function() {
             parityMatrixCreationMethod = parityMatrixCreationMethod || LDPC.PARITY_MATRIX_CREATION_EVENBOTH;
-            checksPerColumnOrCheckDistribution = checksPerColumnOrCheckDistribution || '3';
+            checksPerColumn = checksPerColumn || 3;
             randomSeed = randomSeed || LDPC.RANDOM_SEED;
             avoid4Cycles = avoid4Cycles || 1; // true
             sparseLuStrategy = sparseLuStrategy || LDPC.GENERATOR_MATRIX_CREATION_LU_STRATEGY_MINPROD;
@@ -70,7 +70,7 @@ var LDPC = {
                 'number', // message length
                 'number', // parity length
                 'number', // parity matrix creation method
-                'string', // checks_per_col_or_check_distribution, e.g. "3" or "0.3x2/0.6x3/0.1x7"
+                'number', // checks per column (column weight)
                 'number', // random seed
                 'number', // avoid 4 cycles?
                 'number', // sparse LU strategy
@@ -80,7 +80,7 @@ var LDPC = {
                 messageLength,
                 parityLength,
                 parityMatrixCreationMethod,
-                checksPerColumnOrCheckDistribution,
+                checksPerColumn,
                 randomSeed,
                 avoid4Cycles,
                 sparseLuStrategy,
@@ -97,13 +97,13 @@ var LDPC = {
     // async
     decode: function(receivedData, messageLength, parityLength,
             // optional parameters
-            channelType, channelCharacteristic, maxIterations, parityMatrixCreationMethod, checksPerColumnOrCheckDistribution, randomSeed, avoid4Cycles, sparseLuStrategy) {
+            channelType, channelCharacteristic, maxIterations, parityMatrixCreationMethod, checksPerColumn, randomSeed, avoid4Cycles, sparseLuStrategy) {
         return LDPC._awaitHandler().then(function() {
             channelType = channelType || LDPC.CHANNEL_BINARY_SYMMETRIC;
             channelCharacteristic = channelCharacteristic || 0.1; // for a binary symmetric channel: bit error probability
             maxIterations = maxIterations || LDPC.DECODING_MAX_ITERATIONS;
             parityMatrixCreationMethod = parityMatrixCreationMethod || LDPC.PARITY_MATRIX_CREATION_EVENBOTH;
-            checksPerColumnOrCheckDistribution = checksPerColumnOrCheckDistribution || '3';
+            checksPerColumn = checksPerColumn || 3;
             randomSeed = randomSeed || LDPC.RANDOM_SEED;
             avoid4Cycles = avoid4Cycles || 1; // true
             sparseLuStrategy = sparseLuStrategy || LDPC.GENERATOR_MATRIX_CREATION_LU_STRATEGY_MINPROD;
@@ -130,7 +130,7 @@ var LDPC = {
                 'number', // channel characteristic
                 'number', // max iterations
                 'number', // parity matrix creation method
-                'string', // checks_per_col_or_check_distribution, e.g. "3" or "0.3x2/0.6x3/0.1x7"
+                'number', // checks per column (column weight)
                 'number', // random seed
                 'number', // avoid 4 cycles?
                 'number', // sparse LU strategy
@@ -143,7 +143,7 @@ var LDPC = {
                 channelCharacteristic,
                 maxIterations,
                 parityMatrixCreationMethod,
-                checksPerColumnOrCheckDistribution,
+                checksPerColumn,
                 randomSeed,
                 avoid4Cycles,
                 sparseLuStrategy,

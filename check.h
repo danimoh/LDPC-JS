@@ -6,8 +6,11 @@
 #define CHECK_H
 
 #include <stdlib.h>
-#include <stdio.h>
 #include <math.h>
+
+#ifndef RELEASE
+#include <stdio.h>
+#endif
 
 #include "mod2sparse.h"
 

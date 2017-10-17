@@ -6,9 +6,12 @@
 #ifndef DEC_H
 #define DEC_H
 
-#include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+
+#ifndef RELEASE
+#include <stdio.h>
+#endif
 
 #include "alloc.h"
 #include "mod2sparse.h"

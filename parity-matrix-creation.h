@@ -5,10 +5,13 @@ For the description of the original code see http://radfordneal.github.io/LDPC-c
 #ifndef PARITY_MATRIX_CREATION_H
 #define PARITY_MATRIX_CREATION_H
 
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
+
+#ifndef RELEASE
+#include <stdio.h>
+#endif
 
 #include "rand.h"
 #include "alloc.h"
@@ -26,7 +29,7 @@ For the description of the original code see http://radfordneal.github.io/LDPC-c
 
 void create_parity_matrix
 ( int creation_method,
-  char* checks_per_col_or_check_distribution,
+  int checks_per_col,
   int seed,
   int avoid4cycle
 );

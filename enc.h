@@ -5,9 +5,12 @@
 #ifndef ENC_H
 #define ENC_H
 
-#include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+
+#ifndef RELEASE
+#include <stdio.h>
+#endif
 
 #include "rand.h"
 #include "alloc.h"

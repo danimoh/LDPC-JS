@@ -7,9 +7,12 @@ is chosen, it makes the computation much faster. */
 #ifndef GENERATOR_MATRIX_CREATION_H
 #define GENERATOR_MATRIX_CREATION_H
 
-#include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+
+#ifndef RELEASE
+#include <stdio.h>
+#endif
 
 #include "alloc.h"
 #include "mod2sparse.h"
