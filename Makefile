@@ -19,7 +19,7 @@ emcc:
 	$(COMPILE_EMCC) encode.c
 	$(COMPILE_EMCC) decode.c
 	$(COMPILE_EMCC) test.c
-	# compile to asm.js (might want to add ONLY_MY_CODE=1, see https://github.com/kripken/emscripten/issues/3955)
+	# compile to asm.js (might want to add -s ONLY_MY_CODE=1, see https://github.com/kripken/emscripten/issues/3955)
 	$(LINK_EMCC) -O3 parity-matrix-creation.o generator-matrix-creation.o mod2sparse.o \
 	   rand.o alloc.o globals.o distrib.o check.o enc.o dec.o encode.o decode.o test.o -lm \
 	   -s EXPORTED_FUNCTIONS='["_encode","_decode"]' -s NO_EXIT_RUNTIME=1 -s MODULARIZE=1 \
@@ -28,7 +28,7 @@ emcc:
 	   -s NO_FILESYSTEM=1 -s DISABLE_EXCEPTION_CATCHING=1 -s ELIMINATE_DUPLICATE_FUNCTIONS=1 \
 	   --closure 1 \
 	   -o dist/ldpc-asm.html
-	# compile to wasm
+	# compile to wasm (might want to add -s SIDE_MODULE=1, see https://gist.github.com/kripken/59c67556dc03bb6d57052fedef1e61ab)
 	$(LINK_EMCC) -O3 parity-matrix-creation.o generator-matrix-creation.o mod2sparse.o \
 	   rand.o alloc.o globals.o distrib.o check.o enc.o dec.o encode.o decode.o test.o -lm \
 	   -s EXPORTED_FUNCTIONS='["_encode","_decode"]' -s NO_EXIT_RUNTIME=1 -s MODULARIZE=1 \
