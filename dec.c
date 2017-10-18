@@ -39,7 +39,7 @@ unsigned prprp_decode
   int max_iter,
   char *dblk,		/* Place to store decoding */
   char *pchk,		/* Place to store parity checks */
-  double *bprb		/* Place to store bit probabilities */ // TODO in release this whole bprb thing can go away
+  double *bprb		/* Place to store bit probabilities */
 )
 { 
   int N, n, c;
@@ -57,11 +57,12 @@ unsigned prprp_decode
   { 
     c = check(H,dblk,pchk);
 
-    // TODO remove in release
+    #ifndef RELEASE
     printf("%5d %8.1f %6d %+9.2f %8.1f %+9.2f  %7.1f\n",
        n, changed(lratio,dblk,N), c, loglikelihood(lratio,dblk,N), 
        expected_parity_errors(H,bprb), expected_loglikelihood(lratio,bprb,N),
        entropy(bprb,N));
+    #endif
    
     if (n==max_iter || n==-max_iter || (max_iter>0 && c==0))
     { break; 
@@ -81,7 +82,7 @@ void initprp
 ( mod2sparse *H,	/* Parity check matrix */
   double *lratio,	/* Likelihood ratios for bits */
   char *dblk,		/* Place to store decoding */
-  double *bprb		/* Place to store bit probabilities, 0 if not wanted */ // TODO can be removed in release
+  double *bprb		/* Place to store bit probabilities, 0 if not wanted */
 )
 { 
   mod2entry *e;

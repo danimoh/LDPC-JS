@@ -29,6 +29,8 @@ void create_generator_matrix(
 );
 void make_sparse (mod2sparse_strategy);
 
+#ifndef RELEASE
 void print_generator_matrix();
+#endif
 
 #endif

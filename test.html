@@ -25,8 +25,8 @@
 
     
     async function runTest() {
+        console.log('start tests');
         let fails = 0;
-        let totalBitErrors = 0;
     
         for (let run=0; run<TEST_RUNS; ++run) {
             for (let i=0; i<MESSAGE_LENGTH; ++i) {
@@ -47,21 +47,27 @@
                     received[index] = 1 - CONFIDENCE_HINT;
                 }
             }
-
-            let decoded = await LDPC.decode(received, MESSAGE_LENGTH, PARITY_LENGTH);
-            let bitErrors = 0;
+            
+            let decoded;
+            try {
+                decoded = await LDPC.decode(received, MESSAGE_LENGTH, PARITY_LENGTH);
+            } catch(e) {
+                // some exception happened or we couldn't decode to a codeword
+                ++fails;
+                console.log('test run', run, 'failed');
+                continue;
+            }
             for (let i=0; i<MESSAGE_LENGTH; ++i) {
                 if (decoded[i] !== testMessage[i]) {
-                    bitErrors++;
+                    ++fails;
+                    console.log('test run', run, 'failed but was not detected.');
+                    break;
                 }
             }
-            totalBitErrors += bitErrors;
-            if (bitErrors) {
-                ++fails;
-            }
+            console.log('test run', run, 'successful');
         }
         console.log('Results at message length', MESSAGE_LENGTH, 'parity length', PARITY_LENGTH, 'channel error rate', CHANNEL_ERROR_RATE);
-        console.log('runs', TEST_RUNS, 'fails', fails, 'average relative bit error per fail', totalBitErrors / (fails * MESSAGE_LENGTH) || 0);
+        console.log('runs', TEST_RUNS, 'fails', fails);
     }
 
     runTest();

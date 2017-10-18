@@ -30,6 +30,7 @@ int check
   return c;
 }
 
+#ifndef RELEASE
 
 /* COUNT HOW MANY BITS HAVED CHANGED FROM BIT INDICATED BY LIKELIHOOD.  The
    simple decoding based on likelihood ratio is compared to the given decoding.
@@ -160,3 +161,5 @@ double entropy
 
   return e/log(2.0);
 }
+
+#endif

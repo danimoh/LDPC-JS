@@ -38,9 +38,9 @@ Changes to the original version of Neal 2012:
 - remove global variables in dec.h
 - replace the random generator by xorshift64*
 - removed support for irregular column weight distribution
+- add a RELEASE flag to print less debug info in release mode
 
 TODO:
 - reduce buffer size used by emcc Module
 - free memory in decode
 - cache H and G
-- add RELEASE flag

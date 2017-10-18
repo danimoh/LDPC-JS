@@ -24,10 +24,11 @@ void decode
 {
   char* decoded;
   char *pchk; // parity check. If decoding resulted in a codeword will be all 0
-  double *bitpr; // TODO remove in release
 
   unsigned iters;		/* Unsigned because can be huge for enum */
+
   double chngd;	/* Double because can be fraction */
+  double *bitpr = NULL;
 
   int valid;
 
@@ -43,11 +44,13 @@ void decode
     free_and_exit(1);
   }
 
+  #ifndef RELEASE
   printf("received data:\n");
   for (i=0; i<N; ++i) {
     printf("%f ", received_data[i]);
   }
   printf("\n");
+  #endif
 
   /* Create parity check matrix. This will be written to global variable H */
   create_parity_matrix(parity_matrix_creation_method, checks_per_col,
@@ -58,10 +61,11 @@ void decode
 
   decoded = chk_alloc(N, sizeof *decoded);
   pchk   = chk_alloc (M, sizeof *pchk);
+  #ifndef RELEASE
   bitpr  = chk_alloc (N, sizeof *bitpr);
+  #endif
 
   /* Print header for summary table. */
-  // TODO remove in release
   printf("  iterations valid  changed\n");
 
 
@@ -101,15 +105,15 @@ void decode
       }
       break;
     }
-    default: abort();
+    default: exit(1);
   }
 
   /* Try to decode using the specified method. */
 
   iters = prprp_decode (H, received_data, max_iterations, decoded, pchk, bitpr);
-  
+
   /* See if it worked, and how many bits were changed. */
-  // TODO remove in release. Only valid might be interesting. However, this can be checked from pchk alone if it is all 0.
+  #ifndef RELEASE
   valid = check(H,decoded,pchk)==0;
   chngd = changed(received_data,decoded,N);
   printf("\n\n%10f    %d  %8.1f\n", (double)iters, valid, (double)chngd);
@@ -117,7 +121,13 @@ void decode
   for (i = 0; i<N; i++)
     { printf("%.2f", bitpr[i]);
     }*/
+  #endif
 
+  // if max_iterations was reached, assume we couldn't decode to a valid codeword
+  if (iters == max_iterations) {
+    free_and_exit(1);
+  }
+  
   /* Create generator matrix. It is required for the ordering of columns to retrieve the message bits. */
   create_generator_matrix(generator_matrix_sparse_lu_strategy);
   // retrieve the message bits (see extract.c in the original code)
