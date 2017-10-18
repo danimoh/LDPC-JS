@@ -276,8 +276,8 @@ void mod2sparse_copycols
 }
 
 
+#ifndef RELEASE
 /* PRINT A SPARSE MOD2 MATRIX IN HUMAN-READABLE FORM. */
-// TODO can be removed in release
 void mod2sparse_print
 ( mod2sparse *m
 )
@@ -313,6 +313,7 @@ void mod2sparse_print
     printf("\n");
   }
 }
+#endif
 
 
 /* LOOK FOR AN ENTRY WITH GIVEN ROW AND COLUMN. */

@@ -61,9 +61,8 @@ void make_sparse(mod2sparse_strategy strategy)
 }
 
 
-
+#ifndef RELEASE
 // This is taken from print-gen.c
-// TODO can be removed in release
 void print_generator_matrix() {
   int i, j;
   printf("\nGenerator matrix in sparse representation:\n\n");
@@ -89,3 +88,4 @@ void print_generator_matrix() {
   mod2sparse_print(U);
   printf("\n");
 }
+#endif

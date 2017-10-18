@@ -54,7 +54,6 @@ void encode(
   /* Multiply encoded message with H to check that encoded block is a code word. */
 
   mod2sparse_mulvec (H, out_encoded_message, check);
-  // TODO might also use check from check.h - Maybe remove in release
   for (i = 0; i<M; i++) 
   { if (check[i]==1)
     { printf("LDPC: Encoded message is not a code word!  (Fails check %d)\n",i);
@@ -63,11 +62,13 @@ void encode(
     }
   }
 
+  #ifndef RELEASE
   printf("Encoded message:\n");
   for (i=0; i<N; ++i) {
     printf("%d ", out_encoded_message[i]);
   }
   printf("\n");
+  #endif
 
   free(check);
   free_globals();

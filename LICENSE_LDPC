@@ -43,3 +43,4 @@ Changes to the original version of Neal 2012:
 TODO:
 - reduce buffer size used by emcc Module and autogrow
 - cache H and G
+- maybe use RA LDPC matrices or use almost linear encoding
