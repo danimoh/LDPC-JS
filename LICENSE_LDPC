@@ -41,6 +41,5 @@ Changes to the original version of Neal 2012:
 - add a RELEASE flag to print less debug info in release mode
 
 TODO:
-- reduce buffer size used by emcc Module
-- free memory in decode
+- reduce buffer size used by emcc Module and autogrow
 - cache H and G

@@ -105,7 +105,15 @@ void decode
       }
       break;
     }
-    default: exit(1);
+    default:
+    { 
+      free(decoded);
+      free(pchk);
+      if (bitpr) {
+        free(bitpr);
+      }
+      free_and_exit(1);
+    }
   }
 
   /* Try to decode using the specified method. */
@@ -125,6 +133,11 @@ void decode
 
   // if max_iterations was reached, assume we couldn't decode to a valid codeword
   if (iters == max_iterations) {
+    free(decoded);
+    free(pchk);
+    if (bitpr) {
+      free(bitpr);
+    }
     free_and_exit(1);
   }
   
@@ -137,6 +150,10 @@ void decode
     out_result[i] = decoded[cols[i+M]];
   }
 
-  // TODO free memory
+  free(decoded);
+  free(pchk);
+  if (bitpr) {
+    free(bitpr);
+  }
   free_globals();
 }

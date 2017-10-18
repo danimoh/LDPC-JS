@@ -26,7 +26,7 @@
     
     async function runTest() {
         console.log('start tests');
-        let fails = 0;
+        let fails = 0, undetectedFails = 0;
     
         for (let run=0; run<TEST_RUNS; ++run) {
             for (let i=0; i<MESSAGE_LENGTH; ++i) {
@@ -60,6 +60,7 @@
             for (let i=0; i<MESSAGE_LENGTH; ++i) {
                 if (decoded[i] !== testMessage[i]) {
                     ++fails;
+                    ++undetectedFails;
                     console.log('test run', run, 'failed but was not detected.');
                     break;
                 }
@@ -67,7 +68,7 @@
             console.log('test run', run, 'successful');
         }
         console.log('Results at message length', MESSAGE_LENGTH, 'parity length', PARITY_LENGTH, 'channel error rate', CHANNEL_ERROR_RATE);
-        console.log('runs', TEST_RUNS, 'fails', fails);
+        console.log('runs', TEST_RUNS, 'fails', fails, 'of which', undetectedFails, 'where undetected in decoding.');
     }
 
     runTest();

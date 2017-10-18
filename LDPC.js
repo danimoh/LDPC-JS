@@ -65,32 +65,34 @@ var LDPC = {
             for (var i=0; i<messageLength; ++i) {
                 messageBuffer[i] = message[i];
             }
-            LDPC._handler.ccall('encode', null, [
-                'number', // message pointer
-                'number', // message length
-                'number', // parity length
-                'number', // parity matrix creation method
-                'number', // checks per column (column weight)
-                'number', // random seed
-                'number', // avoid 4 cycles?
-                'number', // sparse LU strategy
-                'number'  // pointer where to write encoded message
-            ], [
-                messagePointer,
-                messageLength,
-                parityLength,
-                parityMatrixCreationMethod,
-                checksPerColumn,
-                randomSeed,
-                avoid4Cycles,
-                sparseLuStrategy,
-                encodedMessagePointer
-            ]);
-            // copy the result before we free the memory
-            var result = new Int8Array(encodedMessageBuffer);
-            LDPC._handler._free(messagePointer);
-            LDPC._handler._free(encodedMessagePointer);
-            return result;
+            try {
+                LDPC._handler.ccall('encode', null, [
+                    'number', // message pointer
+                    'number', // message length
+                    'number', // parity length
+                    'number', // parity matrix creation method
+                    'number', // checks per column (column weight)
+                    'number', // random seed
+                    'number', // avoid 4 cycles?
+                    'number', // sparse LU strategy
+                    'number'  // pointer where to write encoded message
+                ], [
+                    messagePointer,
+                    messageLength,
+                    parityLength,
+                    parityMatrixCreationMethod,
+                    checksPerColumn,
+                    randomSeed,
+                    avoid4Cycles,
+                    sparseLuStrategy,
+                    encodedMessagePointer
+                ]);
+                // copy the result before we free the memory (note that finally gets executed even after return)
+                return new Int8Array(encodedMessageBuffer);
+            } finally {
+                LDPC._handler._free(messagePointer);
+                LDPC._handler._free(encodedMessagePointer);
+            }
         });
     },
 
@@ -122,38 +124,40 @@ var LDPC = {
             for (var i=0; i<dataLength; ++i) {
                 receivedDataView.setFloat64(i * bytesPerDouble, receivedData[i], true);
             }
-            LDPC._handler.ccall('decode', null, [
-                'number', // received data pointer
-                'number', // message length
-                'number', // parity length
-                'number', // channel type
-                'number', // channel characteristic
-                'number', // max iterations
-                'number', // parity matrix creation method
-                'number', // checks per column (column weight)
-                'number', // random seed
-                'number', // avoid 4 cycles?
-                'number', // sparse LU strategy
-                'number'  // pointer where to write decoded data
-            ], [
-                receivedDataPointer,
-                messageLength,
-                parityLength,
-                channelType,
-                channelCharacteristic,
-                maxIterations,
-                parityMatrixCreationMethod,
-                checksPerColumn,
-                randomSeed,
-                avoid4Cycles,
-                sparseLuStrategy,
-                decodedMessagePointer
-            ]);
-            // copy result before we free the memory
-            var result = new Uint8Array(decodedMessageBuffer);
-            LDPC._handler._free(receivedDataPointer);
-            LDPC._handler._free(decodedMessagePointer);
-            return result;
+            try {
+                LDPC._handler.ccall('decode', null, [
+                    'number', // received data pointer
+                    'number', // message length
+                    'number', // parity length
+                    'number', // channel type
+                    'number', // channel characteristic
+                    'number', // max iterations
+                    'number', // parity matrix creation method
+                    'number', // checks per column (column weight)
+                    'number', // random seed
+                    'number', // avoid 4 cycles?
+                    'number', // sparse LU strategy
+                    'number'  // pointer where to write decoded data
+                ], [
+                    receivedDataPointer,
+                    messageLength,
+                    parityLength,
+                    channelType,
+                    channelCharacteristic,
+                    maxIterations,
+                    parityMatrixCreationMethod,
+                    checksPerColumn,
+                    randomSeed,
+                    avoid4Cycles,
+                    sparseLuStrategy,
+                    decodedMessagePointer
+                ]);
+                // copy the result before we free the memory (note that finally gets executed even after return)
+                return new Uint8Array(decodedMessageBuffer);
+            } finally {
+                LDPC._handler._free(receivedDataPointer);
+                LDPC._handler._free(decodedMessagePointer);
+            }
         });
     }
 };
