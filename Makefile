@@ -1,6 +1,6 @@
 # compile using emscripten. Use -DRELEASE to #define RELEASE in the C preprocessor
-COMPILE_EMCC = emcc -c -O -DRELEASE=1   # Command to compile a module from .c to .o
-LINK_EMCC =    emcc -DRELEASE=1         # Command to link a program
+COMPILE_EMCC = emcc -c -O3 -DRELEASE=1   # Command to compile a module from .c to .o
+LINK_EMCC =    emcc -O3 -DRELEASE=1         # Command to link a program
 
 
 # MAKE ALL THE MAIN PROGRAMS.  First makes the modules used.
@@ -20,23 +20,23 @@ emcc:
 	$(COMPILE_EMCC) decode.c
 	$(COMPILE_EMCC) test.c
 	# compile to asm.js (might want to add -s ONLY_MY_CODE=1, see https://github.com/kripken/emscripten/issues/3955)
-	$(LINK_EMCC) -O3 parity-matrix-creation.o generator-matrix-creation.o mod2sparse.o \
+	$(LINK_EMCC) parity-matrix-creation.o generator-matrix-creation.o mod2sparse.o \
 	   rand.o alloc.o globals.o distrib.o check.o enc.o dec.o encode.o decode.o test.o -lm \
 	   -s EXPORTED_FUNCTIONS='["_encode","_decode"]' -s NO_EXIT_RUNTIME=1 -s MODULARIZE=1 \
 	   -s EXPORT_NAME="'LDPC_HANDLER'" -s EXPORTED_RUNTIME_METHODS='["ccall"]' \
 	   -s LIBRARY_DEPS_TO_AUTOEXPORT='[]' -s DEFAULT_LIBRARY_FUNCS_TO_INCLUDE="[]" \
 	   -s NO_FILESYSTEM=1 -s DISABLE_EXCEPTION_CATCHING=1 -s ELIMINATE_DUPLICATE_FUNCTIONS=1 \
 	   --closure 1 \
-	   -o dist/ldpc-asm.html
-	# compile to wasm (might want to add -s SIDE_MODULE=1, see https://gist.github.com/kripken/59c67556dc03bb6d57052fedef1e61ab)
-	$(LINK_EMCC) -O3 parity-matrix-creation.o generator-matrix-creation.o mod2sparse.o \
+	   -o dist/ldpc-asm.js
+	# compile to wasm
+	$(LINK_EMCC) parity-matrix-creation.o generator-matrix-creation.o mod2sparse.o \
 	   rand.o alloc.o globals.o distrib.o check.o enc.o dec.o encode.o decode.o test.o -lm \
 	   -s EXPORTED_FUNCTIONS='["_encode","_decode"]' -s NO_EXIT_RUNTIME=1 -s MODULARIZE=1 \
 	   -s EXPORT_NAME="'LDPC_HANDLER'" -s EXPORTED_RUNTIME_METHODS='["ccall"]' \
 	   -s LIBRARY_DEPS_TO_AUTOEXPORT='[]' -s DEFAULT_LIBRARY_FUNCS_TO_INCLUDE="[]" \
 	   -s NO_FILESYSTEM=1 -s DISABLE_EXCEPTION_CATCHING=1 \
 	   -s WASM=1 --closure 1 \
-	   -o dist/ldpc-wasm.html
+	   -o dist/ldpc-wasm.js
 	rm -f *.o
 
 clean:

@@ -27,13 +27,13 @@ var LDPC = {
                 var script = document.createElement('script');
                 script.onload = resolve;
                 script.onerror = reject;
-                script.src = LDPC.LDPC_BASE_PATH + (window.WebAssembly? 'ldpc-wasm.js' : 'ldps-asm.js');
+                script.src = LDPC.LDPC_BASE_PATH + (window.WebAssembly? 'ldpc-wasm.js' : 'ldpc-asm.js');
                 document.body.appendChild(script);
             }).then(function() {
                 return new Promise(function(resolve, reject) {
                     LDPC._handler = LDPC_HANDLER({
                         wasmBinaryFile: LDPC.LDPC_BASE_PATH + 'ldpc-wasm.wasm',
-                        filePackagePrefixURL: LDPC.LDPC_BASE_PATH
+                        memoryInitializerPrefixURL: LDPC.LDPC_BASE_PATH
                     });
                     // wait until the handler is ready
                     LDPC._handler.onRuntimeInitialized = resolve;
