@@ -23,7 +23,7 @@ emcc:
 	$(LINK_EMCC) parity-matrix-creation.o generator-matrix-creation.o mod2sparse.o \
 	   rand.o alloc.o globals.o distrib.o check.o enc.o dec.o encode.o decode.o test.o -lm \
 	   -s EXPORTED_FUNCTIONS='["_encode","_decode"]' -s NO_EXIT_RUNTIME=1 -s MODULARIZE=1 \
-	   -s EXPORT_NAME="'LDPC_HANDLER'" -s EXPORTED_RUNTIME_METHODS='["ccall"]' \
+	   -s EXPORT_NAME="'LDPC_HANDLER'" -s EXPORTED_RUNTIME_METHODS='[""]' \
 	   -s LIBRARY_DEPS_TO_AUTOEXPORT='[]' -s DEFAULT_LIBRARY_FUNCS_TO_INCLUDE="[]" \
 	   -s NO_FILESYSTEM=1 -s DISABLE_EXCEPTION_CATCHING=1 -s ELIMINATE_DUPLICATE_FUNCTIONS=1 \
 	   --closure 1 \
@@ -32,7 +32,7 @@ emcc:
 	$(LINK_EMCC) parity-matrix-creation.o generator-matrix-creation.o mod2sparse.o \
 	   rand.o alloc.o globals.o distrib.o check.o enc.o dec.o encode.o decode.o test.o -lm \
 	   -s EXPORTED_FUNCTIONS='["_encode","_decode"]' -s NO_EXIT_RUNTIME=1 -s MODULARIZE=1 \
-	   -s EXPORT_NAME="'LDPC_HANDLER'" -s EXPORTED_RUNTIME_METHODS='["ccall"]' \
+	   -s EXPORT_NAME="'LDPC_HANDLER'" -s EXPORTED_RUNTIME_METHODS='[""]' \
 	   -s LIBRARY_DEPS_TO_AUTOEXPORT='[]' -s DEFAULT_LIBRARY_FUNCS_TO_INCLUDE="[]" \
 	   -s NO_FILESYSTEM=1 -s DISABLE_EXCEPTION_CATCHING=1 \
 	   -s WASM=1 --closure 1 \
