@@ -1,6 +1,6 @@
 {
   "name": "ldpc-js",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Low density parity check codes for javascript",
   "main": "LDPC.js",
   "scripts": {
