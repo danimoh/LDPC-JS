@@ -138,3 +138,7 @@ var LDPC = {
         });
     }
 };
+if (module) {
+    module.exports = LDPC;
+}
+
