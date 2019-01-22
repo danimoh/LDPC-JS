@@ -1,5 +1,5 @@
 var LDPC = {
-    LDPC_BASE_PATH: window.LDPC_PATH || 'dist/',
+    LDPC_BASE_PATH: (typeof module === 'undefined') ? window.LDPC_PATH : 'dist/',
 
     // see http://radfordneal.github.io/LDPC-codes/encoding.html#make-gen
     PARITY_MATRIX_CREATION_EVENCOL: 0,
@@ -27,7 +27,7 @@ var LDPC = {
                 var script = document.createElement('script');
                 script.onload = resolve;
                 script.onerror = reject;
-                script.src = LDPC.LDPC_BASE_PATH + (window.WebAssembly? 'ldpc-wasm.js' : 'ldpc-asm.js');
+                script.src = LDPC.LDPC_BASE_PATH + (((typeof module === 'undefined') && window.WebAssembly) ? 'ldpc-wasm.js' : 'ldpc-asm.js');
                 document.body.appendChild(script);
             }).then(function() {
                 return new Promise(function(resolve, reject) {
